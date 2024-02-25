@@ -13,6 +13,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             _scenarioContext = scenarioContext;
         }
 
+
         //----- Background -----
         [Given(@"we are logged in")]
         public void GivenWeAreLoggedIn()
@@ -60,6 +61,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             //TODO > Compare with expected
             _scenarioContext.Pending();
         }
+
 
         //----- Testcase 2 -----
         [Given(@"we have items in the cart")]
