@@ -20,6 +20,7 @@ Add some provided items to the cart and apply a 15% discount.
 	 | Beanie     | 1        |
 	 | Belt       | 3        |
 	 | Cap,Hoodie | 1        |
+	 | Hoodie     | 8        |
 
 Scenario: Checkout cart and create an order
 Checkout and create an order and that the order appears under the

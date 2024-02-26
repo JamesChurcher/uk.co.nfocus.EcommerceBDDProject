@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         }
 
         //----- Locators -----
-        //private IWebElement _usernameField => _driver.FindElement(By.LinkText("View cart"));
+        //private By _viewCartButtonLocator => By.LinkText("View cart");
+        private IWebElement _cartItemCountLabel => _driver.FindElement(By.ClassName("count"));
         private IReadOnlyList<IWebElement> _addToCartButtons => _driver.FindElements(By.LinkText("Add to cart"));
         private Dictionary<string, IWebElement> _productToElement;
 
@@ -46,8 +48,14 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //Click the add to basket button
         public void ClickAddToBasket(string productName)
         {
+            int count = StringToInt(_cartItemCountLabel.Text);
+
             IWebElement element = _productToElement[productName];
             element.Click();
+            count++;
+
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == StringToInt(_cartItemCountLabel.Text));
+            Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
         }
 
         private void GetProductElements()

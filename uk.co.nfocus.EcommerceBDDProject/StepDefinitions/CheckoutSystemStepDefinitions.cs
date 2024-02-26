@@ -64,7 +64,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             //TODO > Add the given quantity of each product to the cart
 
-            Console.WriteLine($" Provide a quantity {quantity} of product {product}");
+            Console.WriteLine($"Provide a quantity {quantity} of product {product}");
 
             // Add to basket
             ShopPagePOM shopPage = new(_driver);
@@ -75,6 +75,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 // Add the given quantity of product to cart
                 for (int i = quantity; i > 0; i--)
                 {
+                    Console.WriteLine("loop over cart i " + i);
                     shopPage.ClickAddToBasket(item);
                 }
             }
@@ -101,6 +102,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Apply coupon
             CartPagePOM cartPage = new(_driver);
+            _scenarioContext["CartPagePOMObject"] = cartPage;
+
             bool discountStatus = cartPage.ApplyDiscountExpectSuccess(testDiscountCode);
             Assert.That(discountStatus, "Could not apply discount");   //Verify discount was applied
             Console.WriteLine("Applied coupon code");
@@ -132,26 +135,31 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //Verification
             // Assess coupon removes 15%
+            string state = "";
             try     //Verify coupon amount
             {
                 Assert.That(actualDiscount, Is.EqualTo(expectedDiscount), "Incorrect discount applied");
+                state = "Pass";
             }
             catch (AssertionException)   //TODO > Catch Assert exceptions only
             {
                 //Do nothing
+                state = "Fail";
             }
-            Console.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
+            Console.WriteLine($"15% discount amount -> {state}\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
 
             // Assess final total is correct
             try     //Verify final subtotal
             {
                 Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");
+                state = "Pass";
             }
             catch (AssertionException)   //TODO > Catch Assert exceptions only
             {
                 //Do nothing
+                state = "Fail";
             }
-            Console.WriteLine($"Final subtotal ->\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
+            Console.WriteLine($"Final subtotal -> {state}\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
 
             // Screenshot the cart summary
             ScrollToElement(_driver, _driver.FindElement(By.ClassName("order-total")));

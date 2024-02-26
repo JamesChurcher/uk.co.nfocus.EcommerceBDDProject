@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         }
 
         //Locators
+        private By _discountCodeLocator = By.Id("coupon_code");
         private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));
         private IWebElement _applyDiscountButton => _driver.FindElement(By.Name("apply_coupon"));
         private IWebElement _removeFromCartButton => _driver.FindElement(By.ClassName("remove"));
@@ -37,12 +39,15 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         private IWebElement _cartSubtotalLabel => _driver.FindElement(By.CssSelector(".cart-subtotal bdi"));
         private IWebElement _cartShippingCostLabel => _driver.FindElement(By.CssSelector(".shipping bdi"));
 
+        private IWebElement _bannerMessage => _driver.FindElement(By.ClassName("woocommerce-message"));
+        //private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.CssSelector(".product-remove > a"));
+
         //Service methods
 
         //Enter discount code
         public CartPagePOM SetDiscountCode(string code)
         {
-            WaitForElDisplayed(_driver, _discountCodeField);
+            WaitForElDisplayed(_driver, _discountCodeLocator);
             _discountCodeField.Clear();
             _discountCodeField.SendKeys(code);
             return this;
@@ -94,6 +99,41 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
             return StringToDecimal(_cartShippingCostLabel.Text);
         }
 
+        //Get banner message text
+        public string GetBannerMessageText()
+        {
+            try
+            {
+                return _bannerMessage.Text;
+            }
+            catch (NoSuchElementException)
+            {
+                return "";
+            }
+        }
+
+        //Does banner message text contain substring
+        public bool DoesBannerMessageContain(string substring)
+        {
+            try
+            {
+                Console.WriteLine($"Does {_bannerMessage.Text} contain the string {substring} ?");
+
+                bool contains = _bannerMessage.Text.Contains(substring);
+                return contains;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
+
+        //Wait for banner message to contain text
+        public void WaitUntilBannerMessageContains(string substring)
+        {
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => DoesBannerMessageContain(substring));
+        }
+
         //Highlevel service methods
 
         //Applied the given discount code to the current cart
@@ -118,15 +158,28 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //Remove the discount and items from cart
         public void MakeCartEmpty()
         {
-            ClickRemoveDiscountButton();
-
-            //Wait until discount is no longer applied
-            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => (drv.FindElements(By.LinkText("[Remove]")).Count == 0));
-
-            // Loop over the remove button for every item in the cart
-            for(int i=_removeFromCartButtons.Count; i>0; i--)
+            //Remove discount
+            try
             {
-                _removeFromCartButtons[0].Click();
+                ClickRemoveDiscountButton();
+            }
+            catch (NoSuchElementException)
+            {
+                //If there was no discount applied then do nothing
+                Console.WriteLine("No discount applied to cart");
+            }
+
+            //Wait until the remove discount link is gone
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);
+
+            int count = _removeFromCartButtons.Count;
+            for (int i = count; i > 0; i--)     //Loop for every remove product button in the cart
+            {
+                _removeFromCartButtons[0].Click(); //Remove the top product
+                count--;
+
+                //Wait until the number of remove product buttons has decreased by 1
+                new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == _removeFromCartButtons.Count);
             }
 
             WaitForElDisplayed(_driver, By.ClassName("cart-empty"));  //Wait for empty cart to be loaded

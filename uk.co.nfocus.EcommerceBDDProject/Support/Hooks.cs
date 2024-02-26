@@ -76,12 +76,23 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             navbar.GoCart();
 
             //TODO > Remove discount and items from cart
+            CartPagePOM cartPage = new(_driver);
 
-            
+            cartPage.MakeCartEmpty();   //Remove the discount and products
+            Console.WriteLine("Remove items from cart");
+
             //TODO > Go to account
-
+            navbar.GoAccount();
 
             //TODO > Logout
+            // Logout
+            AccountPagePOM accountPage = new(_driver);
+            bool logoutStatus = accountPage.LogoutExpectSuccess();
+            Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
+
+            Console.WriteLine("Logout from account");
+
+            Console.WriteLine("--Test Complete!--");
 
             // Quit and dispose of driver
             _driver.Quit();

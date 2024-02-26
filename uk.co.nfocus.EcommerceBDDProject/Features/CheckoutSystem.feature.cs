@@ -91,6 +91,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Features
         [NUnit.Framework.TestCaseAttribute("Beanie", "1", null)]
         [NUnit.Framework.TestCaseAttribute("Belt", "3", null)]
         [NUnit.Framework.TestCaseAttribute("Cap,Hoodie", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Hoodie", "8", null)]
         public void ApplyDiscountToTheCart(string item, string quantity, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
@@ -135,7 +136,7 @@ this.FeatureBackground();
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Checkout cart and create an order", "Checkout and create an order and that the order appears under the\r\naccounts list " +
                     "of orders.", tagsOfScenario, argumentsOfScenario, featureTags);
-#line 24
+#line 25
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -148,19 +149,19 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-#line 27
+#line 28
  testRunner.Given("we have items in the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 28
+#line 29
    testRunner.And("we are viewing the checkout page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 29
+#line 30
   testRunner.When("a purchase is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 30
+#line 31
   testRunner.Then("a new order is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 31
+#line 32
    testRunner.And("our account records this new order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
