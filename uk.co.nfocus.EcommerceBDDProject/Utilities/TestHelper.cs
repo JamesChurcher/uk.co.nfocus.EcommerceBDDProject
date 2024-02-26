@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
-namespace uk.co.nfocus.ecommerce_mini_project.Utilities
+namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
     internal static class TestHelper
     {
@@ -56,7 +56,7 @@ namespace uk.co.nfocus.ecommerce_mini_project.Utilities
         // Returns decimal
         public static decimal StringToDecimal(string myString)
         {
-            return Decimal.Parse(myString, NumberStyles.AllowCurrencySymbol | NumberStyles.Number);
+            return Decimal.Parse(myString, NumberStyles.AllowCurrencySymbol | NumberStyles.Number, new CultureInfo("en-GB"));
         }
 
         // Clears then sends string to given text field

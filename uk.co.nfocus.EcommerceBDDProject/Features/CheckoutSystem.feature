@@ -17,9 +17,9 @@ Add some provided items to the cart and apply a 15% discount.
 
 	 Examples: 
 	 | item       | quantity |
-	 | beanie     | 1        |
-	 | belt       | 3        |
-	 | cap,hoodie | 1        |
+	 | Beanie     | 1        |
+	 | Belt       | 3        |
+	 | Cap,Hoodie | 1        |
 
 Scenario: Checkout cart and create an order
 Checkout and create an order and that the order appears under the

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using uk.co.nfocus.ecommerce_mini_project.Utilities;
-using static uk.co.nfocus.ecommerce_mini_project.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
+using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
 {
@@ -23,7 +23,7 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
                         "Not on the account page");   //Verify we are on the correct page
         }
 
-        //Locators
+        //----- Locators -----
         private IWebElement _usernameField => _driver.FindElement(By.Id("username"));
         private IWebElement _passwordField => _driver.FindElement(By.Id("password"));
         private IWebElement _submitFormButton => _driver.FindElement(By.Name("login"));     //TODO > Add waits
@@ -31,7 +31,8 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         private IWebElement _ordersButton => _driver.FindElement(By.LinkText("Orders"));
         private IReadOnlyList<IWebElement> _allOrderNumbers => _driver.FindElements(By.PartialLinkText("#"));
 
-        //Service methods
+
+        //----- Service methods -----
 
         //Set username in the username field
         public AccountPagePOM SetUsername(string username)
@@ -63,11 +64,11 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         public void ClickOrders()
         {
             _ordersButton.Click();
-            WaitForUrlSubstring(_driver, "my-account/orders");
-            //new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => drv.Url.Contains("my-account/orders"));    //Wait for order summary page to show
+            WaitForUrlSubstring(_driver, "my-account/orders");  //Wait for order summary page to show
         }
 
-        //Higher level helpers
+
+        //----- Higher level helpers -----
 
         //Login to account by providing username, password, and submitting form
         //  Params  -> username: Username, password: Password

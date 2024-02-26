@@ -88,9 +88,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Apply discount to the cart")]
-        [NUnit.Framework.TestCaseAttribute("beanie", "1", null)]
-        [NUnit.Framework.TestCaseAttribute("belt", "3", null)]
-        [NUnit.Framework.TestCaseAttribute("cap,hoodie", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Beanie", "1", null)]
+        [NUnit.Framework.TestCaseAttribute("Belt", "3", null)]
+        [NUnit.Framework.TestCaseAttribute("Cap,Hoodie", "1", null)]
         public void ApplyDiscountToTheCart(string item, string quantity, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;

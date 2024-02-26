@@ -7,8 +7,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using uk.co.nfocus.ecommerce_mini_project.Utilities;
-using static uk.co.nfocus.ecommerce_mini_project.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
+using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
 {
@@ -27,28 +27,12 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
 
         //Locators
         private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));
-        //private IWebElement _discountCodeField
-        //{
-        //    get
-        //    {
-        //        WaitForElDisplayed(_driver, By.Id("coupon_code"));
-        //        return _driver.FindElement(By.Id("coupon_code"));
-        //    }
-        //}
         private IWebElement _applyDiscountButton => _driver.FindElement(By.Name("apply_coupon"));
         private IWebElement _removeFromCartButton => _driver.FindElement(By.ClassName("remove"));
         private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.ClassName("remove"));
         private IWebElement _removeDiscountButton => _driver.FindElement(By.LinkText("[Remove]"));
 
         private IWebElement _cartDiscountLabel => _driver.FindElement(By.CssSelector(".cart-discount .amount"));
-        //private IWebElement _cartDiscountLabel
-        //{
-        //    get
-        //    {
-        //        WaitForElDisplayed(_driver, By.CssSelector(".cart-discount .amount"));
-        //        return _driver.FindElement(By.CssSelector(".cart-discount .amount"));
-        //    }
-        //}
         private IWebElement _cartTotalLabel => _driver.FindElement(By.CssSelector(".order-total bdi"));
         private IWebElement _cartSubtotalLabel => _driver.FindElement(By.CssSelector(".cart-subtotal bdi"));
         private IWebElement _cartShippingCostLabel => _driver.FindElement(By.CssSelector(".shipping bdi"));
