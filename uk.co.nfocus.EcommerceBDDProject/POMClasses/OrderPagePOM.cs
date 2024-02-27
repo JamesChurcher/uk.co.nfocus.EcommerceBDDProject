@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using uk.co.nfocus.EcommerceBDDProject.Support;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -11,9 +12,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
     {
         private IWebDriver _driver;
 
-        public OrderPagePOM(IWebDriver driver)
+        public OrderPagePOM(WebDriverWrapper driverWrapper)
         {
-            this._driver = driver;  //Provide driver
+            this._driver = driverWrapper.Driver;  //Provide driver
 
             Assert.That(_driver.Url,
                         Does.Contain("order"),

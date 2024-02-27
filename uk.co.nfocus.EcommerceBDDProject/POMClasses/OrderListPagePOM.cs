@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using uk.co.nfocus.EcommerceBDDProject.Support;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
@@ -14,9 +15,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
     {
         private IWebDriver _driver;
 
-        public OrderListPagePOM(IWebDriver driver)
+        public OrderListPagePOM(WebDriverWrapper driverWrapper)
         {
-            this._driver = driver;  //Provide driver
+            this._driver = driverWrapper.Driver;  //Provide driver
 
             Assert.That(_driver.Url, 
                         Does.Contain("my-account/orders"), 

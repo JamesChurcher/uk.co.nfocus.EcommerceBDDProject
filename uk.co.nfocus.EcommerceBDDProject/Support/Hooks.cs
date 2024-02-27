@@ -79,7 +79,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             //Navigate back to the cart to clear it
             navbar.GoCart();
 
-            CartPagePOM cartPage = new(_driverWrapper.Driver);
+            CartPagePOM cartPage = new(_driverWrapper);
 
             //Remove the discount and products if they exist
             cartPage.MakeCartEmpty();
@@ -90,7 +90,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
 
             //TODO, figure out why driver thinks it has pressed button when it has not
             // Logout
-            AccountPagePOM accountPage = new(_driverWrapper.Driver);
+            AccountPagePOM accountPage = new(_driverWrapper);
             bool logoutStatus = accountPage.LogoutExpectSuccess();
             Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
 
