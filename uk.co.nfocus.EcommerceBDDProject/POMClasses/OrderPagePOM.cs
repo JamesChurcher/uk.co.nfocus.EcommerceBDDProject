@@ -21,16 +21,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                         "Did not reach order summary page");   //Verify we are on the correct page
         }
 
-        //Locators
+        //----- Locators -----
         private IWebElement _orderNumberLabel => _driver.FindElement(By.ClassName("order"));
 
-        //Service methods
+        //----- Service methods -----
         public string GetOrderNumber()
         {
             var orderNumber = _orderNumberLabel.Text;
             return orderNumber.Substring(orderNumber.IndexOf("\n")+1);
         }
-
-        //Highlevel service methods
     }
 }

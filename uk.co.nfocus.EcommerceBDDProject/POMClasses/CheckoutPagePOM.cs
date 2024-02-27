@@ -25,96 +25,85 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                         "Not on the checkout page");   //Verify we are on the correct page
         }
 
-        //Locators
-
+        //----- Locators -----
+        //Billing info input fields
         private IWebElement _firstNameField => _driver.FindElement(By.Id("billing_first_name"));
-        //public string SetFirstName
-        //{
-        //    get => _firstNameField.Text;
-        //    set => _firstNameField.SendKeys(value);
-        //}
-
         private IWebElement _lastNameField => _driver.FindElement(By.Id("billing_last_name"));
         private IWebElement _countryDropDown => _driver.FindElement(By.Id("billing_country"));
         private IWebElement _streetField => _driver.FindElement(By.Id("billing_address_1"));
         private IWebElement _cityField => _driver.FindElement(By.Id("billing_city"));
         private IWebElement _postcodeField => _driver.FindElement(By.Id("billing_postcode"));
         private IWebElement _phoneNumberField => _driver.FindElement(By.Id("billing_phone"));
-        //private IWebElement _paymentMethodRadio => _driver.FindElement(By.CssSelector("label[for=\"payment_method_cheque\"]"))
+
+        //Payment method
         private IWebElement _paymentMethodRadio => _driver.FindElement(By.ClassName("payment_methods"));    //Payment method parent element
-        //private IWebElement _paymentMethodRadioCheck => _driver.FindElement(By.CssSelector(".payment_method_cheque > label"));
-        //private IWebElement _paymentMethodRadioCOD => _driver.FindElement(By.CssSelector(".payment_method_cod > label"));
-        private IWebElement _placeOrderButton => _driver.FindElement(By.Id("place_order"));
-        //private IWebElement _placeOrderButton => _driver.FindElement(By.LinkText("Place order"));
+        
+        //Get element from the given enum that defines which payment method to select
+        //  Param  -> (PaymentMethod) method: The payment method to use during checkout
+        //  Return -> (IWebElement) the element that, when clicked, sets the desired payment method
+        private IWebElement _GetChildPaymentMethod(PaymentMethod method) 
+        { 
+            return _paymentMethodRadio.FindElement(By.CssSelector($".payment_method_{method} > label")); 
+        }
 
-        //Service methods
+        private IWebElement _placeOrderButton => _driver.FindElement(By.Id("place_order"));     //Place order button
 
-        // Set the street in the first street field
+        //----- Service methods -----
+
+        // Setters
+        // First name in the firstName field
         public CheckoutPagePOM SetFirstName(string name)
         {
             ClearAndSendToTextField(_firstNameField, name);
-            //_firstNameField.Clear();
-            //_firstNameField.SendKeys(name);
             return this;
         }
 
-        // Set the street in the last street field
+        // Last name in the lastname field
         public CheckoutPagePOM SetLastName(string name)
         {
             ClearAndSendToTextField(_lastNameField, name);
-            //_lastNameField.Clear();
-            //_lastNameField.SendKeys(name);
             return this;
         }
 
-        // Set the street in the street address field
+        // Street in the street field
         public CheckoutPagePOM SetStreetAddress(string street)
         {
             ClearAndSendToTextField(_streetField, street);
-            //_streetField.Clear();
-            //_streetField.SendKeys(street);
             return this;
         }
 
-        // Set the town or city in the city field
+        // City in the city field
         public CheckoutPagePOM SetCityField(string city)
         {
             ClearAndSendToTextField(_cityField, city);
-            //_cityField.Clear();
-            //_cityField.SendKeys(city);
             return this;
         }
 
-        // Set the postcode in the postcode field
+        // Postcode in the postcode field
         public CheckoutPagePOM SetPostcodeField(string postcode)
         {
             ClearAndSendToTextField(_postcodeField, postcode);
-            //_postcodeField.Clear();
-            //_postcodeField.SendKeys(postcode);
             return this;
         }
 
-        // Set the phone number in the phone number field
+        // Phone number in the phoneNumber field
         public CheckoutPagePOM SetPhoneNumberField(string phoneNumber)
         {
             ClearAndSendToTextField(_phoneNumberField, phoneNumber);
-            //_phoneNumberField.Clear();
-            //_phoneNumberField.SendKeys(phoneNumber);
             return this;
         }
 
-        // Select country from the dropdown
+        // Select the country from the dropdown
         public CheckoutPagePOM SelectCounrtyDropdown(string country)
         {
             new SelectElement(_countryDropDown).SelectByText(country);
             return this;
         }
 
-        // Select payment method
+        // Select payment method from radio buttons
         public CheckoutPagePOM SelectPaymentMethod(PaymentMethod method)
         {
-            //Create locator from input enum for which payment method to select
-            var locator = By.CssSelector($".payment_method_{method.ToString()} > label");
+            
 
             //Loop over radio click until it is loaded
             for (int i = 0; i < 15; i++)
@@ -124,7 +113,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                     //Console.WriteLine("For loop i is " + i);
 
                     //Find the payment method and click
-                    _paymentMethodRadio.FindElement(By.CssSelector($".payment_method_{method} > label")).Click();
+                    _GetChildPaymentMethod(method).Click();
 
                     break;
                 }
@@ -143,10 +132,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             _placeOrderButton.Click();
             WaitForUrlSubstring(_driver, "order");  //Wait for order summary page to show
-            //new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => drv.Url.Contains("order"));
         }
 
-        //Highlevel service methods
+        //----- Higher level helpers -----
 
         public void CheckoutExpectSuccess(string firstName, string lastName, string country, string street, string city, string postcode, string phoneNumber, PaymentMethod paymentMethod)
         {
@@ -163,8 +151,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             // Select payment method
             SelectPaymentMethod(paymentMethod);
-
-            //Thread.Sleep(3000);
 
             //Loop over button click until it is loaded onto page
             for (int i=0; i<15; i++)

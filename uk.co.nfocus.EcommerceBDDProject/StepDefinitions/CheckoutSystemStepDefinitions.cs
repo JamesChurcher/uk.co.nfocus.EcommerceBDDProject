@@ -96,6 +96,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         [When(@"a (.*)% discount code '([^']*)' is applied")]
         public void WhenADiscountCodeIsApplied(int p0, string edgewords)
         {
+            //TODO put in feature file
             string testDiscountCode = "edgewords";
 
             // Apply coupon
@@ -155,6 +156,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             }
             Console.WriteLine($"Final subtotal -> {state}\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
 
+            //TODO, each test overwrites the last one since they are all given the same name, define test name in screenshot name
             // Screenshot the cart summary
             ScrollToElement(_driverWrapper.Driver, _driverWrapper.Driver.FindElement(By.ClassName("order-total")));     //TODO, move locator or make class for screenshots and move to that
             TakeScreenshot(_driverWrapper.Driver, "TestCase1_CartSummary", "Cart summary page");
@@ -267,6 +269,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine($"Is the new order listed under account? {isOrderCreated}");
 
 
+            //TODO, each test overwrites the last one since they are all given the same name, define test name in screenshot name
             // Screenshot listed account orders
             TakeScreenshot(_driverWrapper.Driver, "TestCase2_AccountOrderList", "List of recent account orders");
         }

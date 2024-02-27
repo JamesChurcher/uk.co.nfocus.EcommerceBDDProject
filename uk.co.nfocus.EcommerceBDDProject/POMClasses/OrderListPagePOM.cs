@@ -30,9 +30,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
         //----- Service methods -----
 
-
-        //----- Higher level helpers -----
-
         //Get order numbers for all of my orders
         //  Params  -> orderNumber: The order number to check
         //  Returns -> (bool) if order is listed under the account

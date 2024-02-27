@@ -27,7 +27,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                         "Not in the cart / on cart page");   //Verify we are on the correct page
         }
 
-        //Locators
+        //----- Locators -----
         private By _discountCodeLocator = By.Id("coupon_code");
         private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));
         private IWebElement _applyDiscountButton => _driver.FindElement(By.Name("apply_coupon"));
@@ -43,7 +43,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private IWebElement _bannerMessage => _driver.FindElement(By.ClassName("woocommerce-message"));
         //private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.CssSelector(".product-remove > a"));
 
-        //Service methods
+        //----- Service methods -----
 
         //Enter discount code
         public CartPagePOM SetDiscountCode(string code)
@@ -171,7 +171,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             }
 
             //Wait until the remove discount link is gone
-            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count); //TODO, make helper method
 
             int count = _removeFromCartButtons.Count;
             for (int i = count; i > 0; i--)     //Loop for every remove product button in the cart
@@ -180,7 +180,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                 count--;
 
                 //Wait until the number of remove product buttons has decreased by 1
-                new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == _removeFromCartButtons.Count);
+                new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == _removeFromCartButtons.Count);    //TODO, make helper method
             }
 
             WaitForElDisplayed(_driver, By.ClassName("cart-empty"));  //Wait for empty cart to be loaded

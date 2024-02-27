@@ -160,7 +160,7 @@ this.FeatureBackground();
                             "values"});
                 table1.AddRow(new string[] {
                             "firstName",
-                            "John"});
+                            "Jeff"});
                 table1.AddRow(new string[] {
                             "lastName",
                             "Bezos"});
@@ -181,7 +181,7 @@ this.FeatureBackground();
                             "07946 123400"});
                 table1.AddRow(new string[] {
                             "paymentMethod",
-                            "cod"});
+                            "cheque"});
 #line 32
   testRunner.When("a purchase is completed with billing information", ((string)(null)), table1, "When ");
 #line hidden
