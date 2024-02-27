@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
-namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
+namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
     internal class ShopPagePOM
     {
@@ -55,9 +55,10 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
             count++;
 
             new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == StringToInt(_cartItemCountLabel.Text));
-            Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
+            //Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
         }
 
+        //Create a dictionary of all product names paired with the button element that will add it to the cart
         private void GetProductElements()
         {
             //Get all elements that represent a product on the page
@@ -80,6 +81,18 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
             //{
             //    Console.WriteLine($"I found a pair {pair.Key} and {pair.Value.GetAttribute("href")} button");
             //}
+        }
+
+        //Get the product names of all products on the shop page
+        //  Returns -> (string[]) array of all products listed on the shop
+        public string[] GetProductNames()
+        {
+            var keys = _productToElement.Keys;
+            string[] names = new string[keys.Count];
+
+            keys.CopyTo(names, 0);
+
+            return names;
         }
     }
 }

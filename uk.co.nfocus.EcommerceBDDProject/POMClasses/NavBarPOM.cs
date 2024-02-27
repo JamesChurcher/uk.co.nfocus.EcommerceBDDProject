@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
-namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
+namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
     internal class NavBarPOM
     {

@@ -95,18 +95,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 
         // Get only the numerical characters from the text of a located web element
         // Returns integer
-        public static int EleToInt(IWebDriver driver, By locator)
-        {
-            var text = driver.FindElement(locator).Text;
-            return StringToInt(text);
-        }
+        //public static int EleToInt(IWebDriver driver, By locator)
+        //{
+        //    var text = driver.FindElement(locator).Text;
+        //    return StringToInt(text);
+        //}
 
         public static void SaveAndAttachScreenShot(Screenshot screenshot, string name, string description=null)
         {
             screenshot.SaveAsFile($"{_screenshotPath}{name}.png");
             TestContext.AddTestAttachment($"{_screenshotPath}{name}.png", description);
         }
-
-        // Scroll element into view
     }
 }

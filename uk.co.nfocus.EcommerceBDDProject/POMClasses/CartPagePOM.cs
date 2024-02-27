@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
-namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
+namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
     internal class CartPagePOM
     {

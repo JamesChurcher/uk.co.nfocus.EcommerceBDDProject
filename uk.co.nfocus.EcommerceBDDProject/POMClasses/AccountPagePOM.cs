@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
-namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
+namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
     internal class AccountPagePOM
     {
@@ -26,10 +26,13 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //----- Locators -----
         private IWebElement _usernameField => _driver.FindElement(By.Id("username"));
         private IWebElement _passwordField => _driver.FindElement(By.Id("password"));
-        private IWebElement _submitFormButton => _driver.FindElement(By.Name("login"));     //TODO > Add waits
-        private IWebElement _logoutButton => _driver.FindElement(By.LinkText("Logout"));    //TODO > Add waits
+
+        private By _loginButtonLocator = By.Name("login");
+        private IWebElement _loginButton => _driver.FindElement(_loginButtonLocator);
+
+        private By _logoutButtonLocator = By.LinkText("Logout");
+        private IWebElement _logoutButton => _driver.FindElement(_logoutButtonLocator);
         private IWebElement _ordersButton => _driver.FindElement(By.LinkText("Orders"));
-        private IReadOnlyList<IWebElement> _allOrderNumbers => _driver.FindElements(By.PartialLinkText("#"));
 
 
         //----- Service methods -----
@@ -51,7 +54,7 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //Login by clicking the "login" button
         public void SubmitLoginForm()
         {
-            _submitFormButton.Click();
+            _loginButton.Click();
         }
 
         //Logout by clicking the "logout" button
@@ -61,7 +64,7 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         }
 
         //Check my orders
-        public void ClickOrders()
+        public void GoOrders()
         {
             _ordersButton.Click();
             WaitForUrlSubstring(_driver, "my-account/orders");  //Wait for order summary page to show
@@ -75,13 +78,16 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //  Returns -> (bool) if login was successful status
         public bool LoginExpectSuccess(string username, string password)
         {
+            WaitForElDisplayed(_driver, _loginButtonLocator);   //Wait to ensure login button has loaded
+
+            //Login steps
             SetUsername(username);
             SetPassword(password);
             SubmitLoginForm();
 
             try
             {
-                WaitForElDisplayed(_driver, By.LinkText("Logout"));  //Wait until login has completed
+                WaitForElDisplayed(_driver, _logoutButtonLocator);  //Wait until login has completed
                 return true;    //Login success
             }
             catch (NoSuchElementException)
@@ -94,37 +100,20 @@ namespace uk.co.nfocus.ecommerce_mini_project.POMClasses
         //  Returns -> (bool) if logout was successful status
         public bool LogoutExpectSuccess()
         {
+            WaitForElDisplayed(_driver, _logoutButtonLocator);  //Wait to ensure logout button has loaded
+
+            //Logout steps
             ClickLogout();
 
             try
             {
-                WaitForElDisplayed(_driver, By.Name("login"));  //Wait until logout has completed
+                WaitForElDisplayed(_driver, _loginButtonLocator);  //Wait until logout has completed
                 return true;    //Logout success
             }
             catch (NoSuchElementException)
             {
                 return false;   //Failed logout
             }
-        }
-
-        //Get order numbers for all of my orders
-        //  Params  -> orderNumber: The order number to check
-        //  Returns -> (bool) if order is listed under the account
-        public bool CheckIfOrderInOrderNumbers(string orderNumber)
-        {
-            ClickOrders();
-            var orderNumbers = _allOrderNumbers;
-
-            foreach(var order in orderNumbers)
-            {
-                //Console.WriteLine($"Does current order {order.Text} contain {orderNumber}");
-                if (order.Text.Contains(orderNumber))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

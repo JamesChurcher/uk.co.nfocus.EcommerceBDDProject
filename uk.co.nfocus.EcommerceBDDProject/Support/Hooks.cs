@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using uk.co.nfocus.ecommerce_mini_project.POMClasses;
+using uk.co.nfocus.EcommerceBDDProject.POMClasses;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Support
 {
@@ -72,19 +72,19 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             //Get navbar object from session
             NavBarPOM navbar = (NavBarPOM)_scenarioContext["NavBarPOMObject"];
 
-            //TODO > Go Cart
+            //Navigate back to the cart to clear it
             navbar.GoCart();
 
-            //TODO > Remove discount and items from cart
             CartPagePOM cartPage = new(_driver);
 
-            cartPage.MakeCartEmpty();   //Remove the discount and products
-            Console.WriteLine("Remove items from cart");
+            //Remove the discount and products if they exist
+            cartPage.MakeCartEmpty();
+            Console.WriteLine("Removed items from cart");
 
-            //TODO > Go to account
+            //Navigate to my account to log out
             navbar.GoAccount();
 
-            //TODO > Logout
+            //TODO, figure out why driver thinks it has pressed button when it has not
             // Logout
             AccountPagePOM accountPage = new(_driver);
             bool logoutStatus = accountPage.LogoutExpectSuccess();
