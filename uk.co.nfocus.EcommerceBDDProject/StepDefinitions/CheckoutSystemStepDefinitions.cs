@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using SpecFlow.Internal.Json;
 using System;
 using System.Diagnostics.Metrics;
 using System.IO;
@@ -25,8 +26,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             _scenarioContext = scenarioContext;
             _driverWrapper = driverWrapper;
-
-            //_driver = (IWebDriver)_scenarioContext["NewDriver"];
         }
 
 
@@ -195,23 +194,33 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine("Navigated to checkout");
         }
 
-        [When(@"a purchase is completed")]
-        public void WhenAPurchaseIsCompleted()
+        [When(@"a purchase is completed with billing information")]
+        public void WhenAPurchaseIsCompletedWithBillingInformation(Table billInfoTable)
         {
-            //TODO, move data to annotation or feature file
-            string firstName = "Jeff";
-            string lastName = "Bezos";
-            string country = "United Kingdom (UK)";
-            string street = "Amazon lane";
-            string city = "New York";
-            string postcode = "W1J 7NT";
-            string phoneNumber = "07946 123400";
-            PaymentMethod paymentMethod = PaymentMethod.cheque;
+            // Create a dictionary from the table
+            Dictionary<string, string> billInfoDict = new();
+            foreach (var row in billInfoTable.Rows)
+            {
+                billInfoDict.Add(row[0], row[1]);
+            }
+
+            //Convert the payment method string to an enum
+            PaymentMethod method;
+            Enum.TryParse<PaymentMethod>(billInfoDict["paymentMethod"], out method);
 
             // Enter billing information
             CheckoutPagePOM checkoutPage = new(_driverWrapper);
             Console.WriteLine("Enter billing information");
-            checkoutPage.CheckoutExpectSuccess(firstName, lastName, country, street, city, postcode, phoneNumber, paymentMethod);
+
+            checkoutPage.CheckoutExpectSuccess(
+                billInfoDict["firstName"], 
+                billInfoDict["lastName"], 
+                billInfoDict["country"], 
+                billInfoDict["street"], 
+                billInfoDict["city"], 
+                billInfoDict["postcode"], 
+                billInfoDict["phoneNumber"], 
+                method);
         }
 
         [Then(@"a new order is created")]

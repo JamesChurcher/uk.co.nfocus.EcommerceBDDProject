@@ -112,16 +112,16 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-#line 13
+#line 14
  testRunner.Given(string.Format("we add \'{0}\' of \'{1}\' to the cart", quantity, item), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 14
+#line 15
    testRunner.And("we are viewing the cart page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 15
+#line 16
   testRunner.When("a 15% discount code \'edgewords\' is applied", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 16
+#line 17
   testRunner.Then("the correct amount is subtracted from the total", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -136,7 +136,7 @@ this.FeatureBackground();
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Checkout cart and create an order", "Checkout and create an order and that the order appears under the\r\naccounts list " +
                     "of orders.", tagsOfScenario, argumentsOfScenario, featureTags);
-#line 25
+#line 26
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -149,19 +149,46 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-#line 28
+#line 30
  testRunner.Given("we have items in the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 29
+#line 31
    testRunner.And("we are viewing the checkout page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 30
-  testRunner.When("a purchase is completed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                            "field",
+                            "values"});
+                table1.AddRow(new string[] {
+                            "firstName",
+                            "John"});
+                table1.AddRow(new string[] {
+                            "lastName",
+                            "Bezos"});
+                table1.AddRow(new string[] {
+                            "country",
+                            "United Kingdom (UK)"});
+                table1.AddRow(new string[] {
+                            "street",
+                            "Amazon lane"});
+                table1.AddRow(new string[] {
+                            "city",
+                            "New York"});
+                table1.AddRow(new string[] {
+                            "postcode",
+                            "W1J 7NT"});
+                table1.AddRow(new string[] {
+                            "phoneNumber",
+                            "07946 123400"});
+                table1.AddRow(new string[] {
+                            "paymentMethod",
+                            "cod"});
+#line 32
+  testRunner.When("a purchase is completed with billing information", ((string)(null)), table1, "When ");
 #line hidden
-#line 31
+#line 42
   testRunner.Then("a new order is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 32
+#line 43
    testRunner.And("our account records this new order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
