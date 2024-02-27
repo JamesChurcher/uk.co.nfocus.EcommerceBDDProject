@@ -35,10 +35,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.ClassName("remove"));
         private IWebElement _removeDiscountButton => _driver.FindElement(By.LinkText("[Remove]"));
 
-        private IWebElement _cartDiscountLabel => _driver.FindElement(By.CssSelector(".cart-discount .amount"));
-        private IWebElement _cartTotalLabel => _driver.FindElement(By.CssSelector(".order-total bdi"));
-        private IWebElement _cartSubtotalLabel => _driver.FindElement(By.CssSelector(".cart-subtotal bdi"));
-        private IWebElement _cartShippingCostLabel => _driver.FindElement(By.CssSelector(".shipping bdi"));
+        private By _cartDiscountLocator = By.CssSelector(".cart-discount .amount");
+        private By _cartTotalLocator = By.CssSelector(".order-total bdi");
+        private By _cartSubtotalLocator = By.CssSelector(".cart-subtotal bdi");
+        private By _cartShippingCostLocator = By.CssSelector(".shipping bdi");
+        private IWebElement _cartDiscountLabel => _driver.FindElement(_cartDiscountLocator);
+        private IWebElement _cartTotalLabel => _driver.FindElement(_cartTotalLocator);
+        private IWebElement _cartSubtotalLabel => _driver.FindElement(_cartSubtotalLocator);
+        private IWebElement _cartShippingCostLabel => _driver.FindElement(_cartShippingCostLocator);
 
         private IWebElement _bannerMessage => _driver.FindElement(By.ClassName("woocommerce-message"));
         //private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.CssSelector(".product-remove > a"));
@@ -75,28 +79,32 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Get the cost removed by the discount and format as a decimal type
         public decimal GetAppliedDiscount()
         {
-            WaitForElDisplayed(_driver, _cartDiscountLabel);
+            //WaitForElDisplayed(_driver, _cartDiscountLabel);    //TODO remove
+            WaitForElDisplayed(_driver, _cartDiscountLocator);
             return StringToDecimal(_cartDiscountLabel.Text);
         }
 
         //Get the cart subtotal and format as a decimal type
         public decimal GetCartSubtotal()
         {
-            WaitForElDisplayed(_driver, _cartSubtotalLabel);
+            //WaitForElDisplayed(_driver, _cartSubtotalLabel);    //TODO remove
+            WaitForElDisplayed(_driver, _cartSubtotalLocator);
             return StringToDecimal(_cartSubtotalLabel.Text);
         }
 
         //Get the cart total and format as a decimal type
         public decimal GetCartTotal()
         {
-            WaitForElDisplayed(_driver, _cartTotalLabel);
+            //WaitForElDisplayed(_driver, _cartTotalLabel);   //TODO remove
+            WaitForElDisplayed(_driver, _cartTotalLocator);
             return StringToDecimal(_cartTotalLabel.Text);
         }
 
         //Get the shipping cost and format as a decimal type
         public decimal GetShippingCost()
         {
-            WaitForElDisplayed(_driver, _cartShippingCostLabel);
+            //WaitForElDisplayed(_driver, _cartShippingCostLabel);    //TODO remove
+            WaitForElDisplayed(_driver, _cartShippingCostLocator);
             return StringToDecimal(_cartShippingCostLabel.Text);
         }
 
@@ -184,8 +192,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             }
 
             WaitForElDisplayed(_driver, By.ClassName("cart-empty"));  //Wait for empty cart to be loaded
-
-            Thread.Sleep(200); //Small sleep to stop flakeyness of navbar click
         }
     }
 }

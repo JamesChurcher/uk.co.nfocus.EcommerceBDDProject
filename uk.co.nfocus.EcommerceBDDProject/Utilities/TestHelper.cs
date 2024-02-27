@@ -31,15 +31,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             wait.Until(drv => drv.FindElement(locator).Displayed);
         }
 
-        // WARNING - Does not word on elements that do not exist yet because passing element parameter required calling the element
-        //TODO > Remove
-        // Explicit wait for an already given element object to be displayed
-        public static void WaitForElDisplayed(IWebDriver driver, IWebElement element)
-        {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
-            wait.Until(drv => element.Displayed);
-        }
-
         //Explicit wait for url to contain substring
         public static void WaitForUrlSubstring(IWebDriver driver, string urlSubstring)
         {

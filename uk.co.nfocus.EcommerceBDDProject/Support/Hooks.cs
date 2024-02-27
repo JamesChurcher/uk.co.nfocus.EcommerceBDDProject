@@ -85,6 +85,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             cartPage.MakeCartEmpty();
             Console.WriteLine("Removed items from cart");
 
+            Thread.Sleep(1000); //Small sleep to stop flakeyness of navbar click
+
             //Navigate to my account to log out
             navbar.GoAccount();
 
