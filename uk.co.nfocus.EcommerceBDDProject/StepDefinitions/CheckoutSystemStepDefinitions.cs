@@ -4,6 +4,7 @@ using System.Diagnostics.Metrics;
 using System.IO;
 using TechTalk.SpecFlow;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
+using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
@@ -13,17 +14,19 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
     {
         private readonly ScenarioContext _scenarioContext;
 
-        private IWebDriver _driver; //TODO > Make wrapper
+        //private IWebDriver _driver; //TODO > Make wrapper
+        private WebDriverWrapper _driverWrapper;
 
         private NavBarPOM _navBar;
 
         private const decimal couponWorth = 0.15M;
 
-        public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext)
+        public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
         {
             _scenarioContext = scenarioContext;
+            _driverWrapper = driverWrapper;
 
-            _driver = (IWebDriver)_scenarioContext["NewDriver"];
+            //_driver = (IWebDriver)_scenarioContext["NewDriver"];
         }
 
 
@@ -35,7 +38,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             string testPassword = "MyPassword12345@";
 
             // Create NavBar POM instance
-            _navBar = new(_driver);
+            _navBar = new(_driverWrapper.Driver);
             _scenarioContext["NavBarPOMObject"] = _navBar;
 
             // Navigate to account login page
@@ -43,7 +46,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine("Navigated to login page");
 
             // Login to said account
-            AccountPagePOM loginPage = new(_driver);
+            AccountPagePOM loginPage = new(_driverWrapper.Driver);
 
             //Provide username, password, and click
             bool loginStatus = loginPage.LoginExpectSuccess(testUsername, testPassword);
@@ -67,7 +70,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine($"Provide a quantity {quantity} of product {product}");
 
             // Add to basket
-            ShopPagePOM shopPage = new(_driver);
+            ShopPagePOM shopPage = new(_driverWrapper.Driver);
 
             // If given a list of products, seperate them and loop over each one
             foreach(string item in product.Split(','))
@@ -97,7 +100,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             string testDiscountCode = "edgewords";
 
             // Apply coupon
-            CartPagePOM cartPage = new(_driver);
+            CartPagePOM cartPage = new(_driverWrapper.Driver);
             _scenarioContext["CartPagePOMObject"] = cartPage;
 
             bool discountStatus = cartPage.ApplyDiscountExpectSuccess(testDiscountCode);
@@ -108,7 +111,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         [Then(@"the correct amount is subtracted from the total")]
         public void ThenTheCorrectAmountIsSubtractedFromTheTotal()
         {
-            CartPagePOM cartPage = new(_driver);
+            CartPagePOM cartPage = new(_driverWrapper.Driver);
 
             // Get subtotal from webage
             Decimal subtotal = cartPage.GetCartSubtotal();
@@ -154,8 +157,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine($"Final subtotal -> {state}\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
 
             // Screenshot the cart summary
-            ScrollToElement(_driver, _driver.FindElement(By.ClassName("order-total")));
-            TakeScreenshot(_driver, "TestCase1_CartSummary", "Cart summary page");
+            ScrollToElement(_driverWrapper.Driver, _driverWrapper.Driver.FindElement(By.ClassName("order-total")));     //TODO, move locator or make class for screenshots and move to that
+            TakeScreenshot(_driverWrapper.Driver, "TestCase1_CartSummary", "Cart summary page");
         }
 
 
@@ -164,7 +167,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         public void GivenWeHaveItemsInTheCart()
         {
             // Add to basket
-            ShopPagePOM shopPage = new(_driver);
+            ShopPagePOM shopPage = new(_driverWrapper.Driver);
 
             // Add a random item to the basket
             string[] productNames = shopPage.GetProductNames();
@@ -206,7 +209,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             PaymentMethod paymentMethod = PaymentMethod.cheque;
 
             // Enter billing information
-            CheckoutPagePOM checkoutPage = new(_driver);
+            CheckoutPagePOM checkoutPage = new(_driverWrapper.Driver);
             Console.WriteLine("Enter billing information");
             checkoutPage.CheckoutExpectSuccess(firstName, lastName, country, street, city, postcode, phoneNumber, paymentMethod);
         }
@@ -215,7 +218,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         public void ThenANewOrderIsCreated()
         {
             // Order summary page
-            OrderPagePOM orderPage = new(_driver);
+            OrderPagePOM orderPage = new(_driverWrapper.Driver);
             string orderNumber = orderPage.GetOrderNumber();
             _scenarioContext["OrderNumber"] = orderNumber;
             Console.WriteLine($"New order number is {orderNumber}");
@@ -223,7 +226,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             //TODO, maybe verify if an order was created successfully?
 
             // Screenshot order summary page
-            TakeScreenshot(_driver, "TestCase2_OrderSummary", "New Order summary page");
+            TakeScreenshot(_driverWrapper.Driver, "TestCase2_OrderSummary", "New Order summary page");
         }
 
         [Then(@"our account records this new order")]
@@ -236,11 +239,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             string orderNumber = (string)_scenarioContext["OrderNumber"];
 
             // Go to my account's list of orders
-            AccountPagePOM accountPage = new(_driver);
+            AccountPagePOM accountPage = new(_driverWrapper.Driver);
             accountPage.GoOrders();
 
             // Check if the new order is listed under this account
-            OrderListPagePOM orderListPage = new(_driver);
+            OrderListPagePOM orderListPage = new(_driverWrapper.Driver);
             bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);    //TODO, maybe move comparison outside of POM so we get the actual order number
 
             // Assess if previously created order is listed under this account
@@ -256,7 +259,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Screenshot listed account orders
-            TakeScreenshot(_driver, "TestCase2_AccountOrderList", "List of recent account orders");
+            TakeScreenshot(_driverWrapper.Driver, "TestCase2_AccountOrderList", "List of recent account orders");
         }
     }
 }

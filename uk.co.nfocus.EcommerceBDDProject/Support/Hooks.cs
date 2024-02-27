@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
+using uk.co.nfocus.EcommerceBDDProject.Support;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Support
 {
@@ -16,11 +17,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
     {
         private readonly ScenarioContext _scenarioContext;
 
-        private IWebDriver _driver;
+        //private IWebDriver _driver;
 
-        public Hooks(ScenarioContext scenarioContext)
+        private WebDriverWrapper _driverWrapper;
+
+        public Hooks(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
         {
             _scenarioContext = scenarioContext;
+            _driverWrapper = driverWrapper;
         }
 
         [Before]
@@ -44,26 +48,26 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             switch (browser)
             {
                 case "firefox":
-                    _driver = new FirefoxDriver();
+                    _driverWrapper.Driver = new FirefoxDriver();
                     break;
                 case "chrome":
                     ChromeOptions options = new ChromeOptions();
                     options.BrowserVersion = "canary"; //stable/beta/dev/canary/num
-                    _driver = new ChromeDriver(options);
+                    _driverWrapper.Driver = new ChromeDriver(options);
                     break;
                 default:
-                    _driver = new EdgeDriver();
+                    _driverWrapper.Driver = new EdgeDriver();
                     break;
             }
 
-            _scenarioContext["NewDriver"] = _driver;
+            //_scenarioContext["NewDriver"] = _driverWrapper.Driver;
 
             // Go to shop url
-            _driver.Navigate().GoToUrl("https://www.edgewordstraining.co.uk/demo-site/");
+            _driverWrapper.Driver.Navigate().GoToUrl("https://www.edgewordstraining.co.uk/demo-site/");
             Console.WriteLine("Navigated to site");
 
             // Dismiss popup
-            _driver.FindElement(By.LinkText("Dismiss")).Click();    //TODO > Move to POM class or wrapper
+            _driverWrapper.Driver.FindElement(By.LinkText("Dismiss")).Click();    //TODO > Move to POM class or wrapper
         }
 
         [After]
@@ -75,7 +79,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             //Navigate back to the cart to clear it
             navbar.GoCart();
 
-            CartPagePOM cartPage = new(_driver);
+            CartPagePOM cartPage = new(_driverWrapper.Driver);
 
             //Remove the discount and products if they exist
             cartPage.MakeCartEmpty();
@@ -86,7 +90,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
 
             //TODO, figure out why driver thinks it has pressed button when it has not
             // Logout
-            AccountPagePOM accountPage = new(_driver);
+            AccountPagePOM accountPage = new(_driverWrapper.Driver);
             bool logoutStatus = accountPage.LogoutExpectSuccess();
             Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
 
@@ -95,7 +99,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             Console.WriteLine("--Test Complete!--");
 
             // Quit and dispose of driver
-            _driver.Quit();
+            _driverWrapper.Driver.Quit();
         }
     }
 }
