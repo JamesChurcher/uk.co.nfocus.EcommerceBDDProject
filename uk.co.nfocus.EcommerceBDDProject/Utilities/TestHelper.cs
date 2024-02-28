@@ -24,6 +24,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             cod
         }
 
+        //TODO, create one webdriverwait object for all explicit waits in this file
+
         // Explicit wait for element to be displayed
         public static void WaitForElDisplayed(IWebDriver driver, By locator)
         {
@@ -37,6 +39,15 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
             wait.Until(drv => drv.Url.Contains(urlSubstring));
         }
+
+        ////WARNING - does not work, actualNum should be an expression that is evaluated constantly during wait until
+        ////          but it is evaluated once on function call and therefore times out. Can you pass expression by reference?
+        ////Explicit wait for change in value
+        //public static void WaitForValueChange(IWebDriver driver, int expectedNum, int actualNum)
+        //{
+        //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
+        //    wait.Until(drv => expectedNum == actualNum);
+        //}
 
         // Remove all non numerical characters from a string
         // Returns integer

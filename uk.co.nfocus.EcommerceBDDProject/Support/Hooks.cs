@@ -17,8 +17,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
     {
         private readonly ScenarioContext _scenarioContext;
 
-        //private IWebDriver _driver;
-
         private WebDriverWrapper _driverWrapper;
 
         public Hooks(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
@@ -34,8 +32,26 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             string browser = Environment.GetEnvironmentVariable("BROWSER");
             Console.WriteLine($"Browser is set to: {browser}");
 
-            //string webUrl = TestContext.Parameters["WebAppUrl"];
-            //Console.WriteLine("The website url is " + webUrl);
+            // Get username and password and make available during test
+            string username = Environment.GetEnvironmentVariable("USERNAME");
+            string password = Environment.GetEnvironmentVariable("PASSWORD");
+
+            _scenarioContext["Username"] = username;
+            _scenarioContext["Password"] = password;
+
+            // Check if runfile contains usernme and password
+            if (username == null || password == null)
+            {
+                throw new NotFoundException("Could not set Username and Password, env variables not found");
+            }
+            else
+            {
+                Console.WriteLine("Username and Password have been set");
+            }
+
+            // Get the url of the website
+            string webUrl = TestContext.Parameters["WebAppUrl"];
+            Console.WriteLine("The website url is " + webUrl);
 
             // Default to Edge if browser env is null
             if (browser == null)
@@ -60,10 +76,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                     break;
             }
 
-            //_scenarioContext["NewDriver"] = _driverWrapper.Driver;
-
             // Go to shop url
-            _driverWrapper.Driver.Navigate().GoToUrl("https://www.edgewordstraining.co.uk/demo-site/");
+            _driverWrapper.Driver.Navigate().GoToUrl(webUrl);
             Console.WriteLine("Navigated to site");
 
             // Dismiss popup

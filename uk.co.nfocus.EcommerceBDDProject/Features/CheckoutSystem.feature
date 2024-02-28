@@ -13,8 +13,8 @@ Add some provided items to the cart and apply a 15% discount.
 
 	Given we add '<quantity>' of '<item>' to the cart
 	  And we are viewing the cart page
-	 When a 15% discount code 'edgewords' is applied
-	 Then the correct amount is subtracted from the total
+	 When a discount code 'edgewords' is applied
+	 Then 15% is subtracted from the total
 
 	 Examples: 
 	 | item       | quantity |

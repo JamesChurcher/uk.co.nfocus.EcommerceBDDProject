@@ -20,7 +20,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
         private NavBarPOM _navBar;
 
-        private const decimal couponWorth = 0.15M;
+        //private const decimal couponWorth = 0.15M;
 
         public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
         {
@@ -33,8 +33,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         [Given(@"we are logged in")]
         public void GivenWeAreLoggedIn()
         {
-            string testUsername = "newexampleemail@email.com";
-            string testPassword = "MyPassword12345@";
+            // Get username and password from setup hooks
+            string testUsername = (string)_scenarioContext["Username"];
+            string testPassword = (string)_scenarioContext["Password"];
 
             // Create NavBar POM instance
             _navBar = new(_driverWrapper);
@@ -77,7 +78,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 // Add the given quantity of product to cart
                 for (int i = quantity; i > 0; i--)
                 {
-                    Console.WriteLine("loop over cart i " + i);
+                    //Console.WriteLine("loop over cart i " + i);
                     shopPage.ClickAddToBasket(item);
                 }
             }
@@ -93,12 +94,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine("Navigated to cart");
         }
 
-        [When(@"a (.*)% discount code '([^']*)' is applied")]
-        public void WhenADiscountCodeIsApplied(int p0, string edgewords)
+        [When(@"a discount code '([^']*)' is applied")]
+        public void WhenADiscountCodeIsApplied(string testDiscountCode)
         {
-            //TODO put in feature file
-            string testDiscountCode = "edgewords";
-
             // Apply coupon
             CartPagePOM cartPage = new(_driverWrapper);
             _scenarioContext["CartPagePOMObject"] = cartPage;
@@ -108,9 +106,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Console.WriteLine("Applied coupon code");
         }
 
-        [Then(@"the correct amount is subtracted from the total")]
-        public void ThenTheCorrectAmountIsSubtractedFromTheTotal()
+        [Then(@"(.*)% is subtracted from the total")]
+        public void ThenTheCorrectAmountIsSubtractedFromTheTotal(Decimal couponWorth)
         {
+            //Convert percentage to decimal
+            couponWorth /= 100M;
+
             CartPagePOM cartPage = new(_driverWrapper);
 
             // Get subtotal from webage

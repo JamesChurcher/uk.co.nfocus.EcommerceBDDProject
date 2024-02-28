@@ -51,6 +51,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             //Wait until basket has registered new item and count has incremented
             new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == StringToInt(_cartItemCountLabel.Text));   //TODO, make helper method
+            //WaitForValueChange(_driver, count, StringToInt(_cartItemCountLabel.Text));
             //Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
         }
 

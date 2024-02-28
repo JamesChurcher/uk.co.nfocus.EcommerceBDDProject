@@ -180,6 +180,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             //Wait until the remove discount link is gone
             new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count); //TODO, make helper method
+            //WaitForValueChange(_driver, 0, _driver.FindElements(By.LinkText("[Remove]")).Count);
 
             int count = _removeFromCartButtons.Count;
             for (int i = count; i > 0; i--)     //Loop for every remove product button in the cart
@@ -189,6 +190,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
                 //Wait until the number of remove product buttons has decreased by 1
                 new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == _removeFromCartButtons.Count);    //TODO, make helper method
+                //WaitForValueChange(_driver, count, _removeFromCartButtons.Count);
             }
 
             WaitForElDisplayed(_driver, By.ClassName("cart-empty"));  //Wait for empty cart to be loaded

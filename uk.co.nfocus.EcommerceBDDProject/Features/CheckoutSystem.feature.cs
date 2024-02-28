@@ -119,10 +119,10 @@ this.FeatureBackground();
    testRunner.And("we are viewing the cart page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 16
-  testRunner.When("a 15% discount code \'edgewords\' is applied", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When("a discount code \'edgewords\' is applied", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 17
-  testRunner.Then("the correct amount is subtracted from the total", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("15% is subtracted from the total", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
