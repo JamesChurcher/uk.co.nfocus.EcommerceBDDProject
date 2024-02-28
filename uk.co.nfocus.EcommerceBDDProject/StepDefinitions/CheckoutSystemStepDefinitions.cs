@@ -41,6 +41,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             _navBar = new(_driverWrapper);
             _scenarioContext["NavBarPOMObject"] = _navBar;
 
+            // Dismiss popup
+            _navBar.DismissPopup();
+
             // Navigate to account login page
             _navBar.GoAccount();
             Console.WriteLine("Navigated to login page");

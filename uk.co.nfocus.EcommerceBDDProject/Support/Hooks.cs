@@ -79,9 +79,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             // Go to shop url
             _driverWrapper.Driver.Navigate().GoToUrl(webUrl);
             Console.WriteLine("Navigated to site");
-
-            // Dismiss popup
-            _driverWrapper.Driver.FindElement(By.LinkText("Dismiss")).Click();    //TODO > Move to POM class or wrapper
         }
 
         [After]
@@ -103,7 +100,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             //Navigate to my account to log out
             navbar.GoAccount();
 
-            //TODO, figure out why driver thinks it has pressed button when it has not
             // Logout
             AccountPagePOM accountPage = new(_driverWrapper);
             bool logoutStatus = accountPage.LogoutExpectSuccess();

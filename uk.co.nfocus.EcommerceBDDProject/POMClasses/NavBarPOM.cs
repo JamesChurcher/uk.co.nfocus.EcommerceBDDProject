@@ -29,6 +29,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private IWebElement _checkoutButton => _driver.FindElement(By.LinkText("Checkout"));
         private IWebElement _accountButton => _driver.FindElement(By.LinkText("My account"));
         private IWebElement _blogButton => _driver.FindElement(By.LinkText("Blog"));
+        private IWebElement _dismissButton => _driver.FindElement(By.LinkText("Dismiss"));
 
         private By _addToCartButton = By.LinkText("Add to cart");
 
@@ -84,6 +85,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             _blogButton.Click();
             WaitForUrlSubstring(_driver, "blog");   //Wait for blog page to load
+        }
+
+        //Dismiss popup button
+        public void DismissPopup()
+        {
+            _dismissButton.Click();
         }
     }
 }
