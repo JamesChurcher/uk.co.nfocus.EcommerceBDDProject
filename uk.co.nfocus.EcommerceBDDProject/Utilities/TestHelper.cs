@@ -24,19 +24,24 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             cod
         }
 
-        //TODO, create one webdriverwait object for all explicit waits in this file
+        //----- Waits -----
+        // Get a new driver wait object
+        public static WebDriverWait GetWaitObject(IWebDriver driver, int timeout=4)
+        {
+            return new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+        }
 
         // Explicit wait for element to be displayed
         public static void WaitForElDisplayed(IWebDriver driver, By locator)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
+            WebDriverWait wait = GetWaitObject(driver);
             wait.Until(drv => drv.FindElement(locator).Displayed);
         }
 
         //Explicit wait for url to contain substring
         public static void WaitForUrlSubstring(IWebDriver driver, string urlSubstring)
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
+            WebDriverWait wait = GetWaitObject(driver);
             wait.Until(drv => drv.Url.Contains(urlSubstring));
         }
 
@@ -48,6 +53,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
         //    wait.Until(drv => expectedNum == actualNum);
         //}
+
 
         // Remove all non numerical characters from a string
         // Returns integer
@@ -95,6 +101,15 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             }
         }
 
+        // Create valid filename from test name
+        public static string ValidFileNameFromTest(string text)
+        {
+            string myString = TestContext.CurrentContext.Test.Name + "_" + text;
+            myString = myString.Replace("\"", "");
+            return myString;
+        }
+
+
         // Get only the numerical characters from the text of a located web element
         // Returns integer
         //public static int EleToInt(IWebDriver driver, By locator)
@@ -103,10 +118,10 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         //    return StringToInt(text);
         //}
 
-        public static void SaveAndAttachScreenShot(Screenshot screenshot, string name, string description=null)
-        {
-            screenshot.SaveAsFile($"{_screenshotPath}{name}.png");
-            TestContext.AddTestAttachment($"{_screenshotPath}{name}.png", description);
-        }
+        //public static void SaveAndAttachScreenShot(Screenshot screenshot, string name, string description=null)
+        //{
+        //    screenshot.SaveAsFile($"{_screenshotPath}{name}.png");
+        //    TestContext.AddTestAttachment($"{_screenshotPath}{name}.png", description);
+        //}
     }
 }

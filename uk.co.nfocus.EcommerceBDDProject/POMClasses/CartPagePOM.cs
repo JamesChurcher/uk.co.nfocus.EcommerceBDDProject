@@ -45,7 +45,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private IWebElement _cartShippingCostLabel => _driver.FindElement(_cartShippingCostLocator);
 
         private IWebElement _bannerMessage => _driver.FindElement(By.ClassName("woocommerce-message"));
-        //private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.CssSelector(".product-remove > a"));
 
         //----- Service methods -----
 
@@ -140,10 +139,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Wait for banner message to contain text
         public void WaitUntilBannerMessageContains(string substring)
         {
-            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => DoesBannerMessageContain(substring));
+            GetWaitObject(_driver).Until(drv => DoesBannerMessageContain(substring));
         }
 
-        //Highlevel service methods
+        //Scroll to order total
+        public void ScrollToOrderTotal()
+        {
+            ScrollToElement(_driver, _cartTotalLabel);
+        }
+
+        //----- Higher level helpers -----
 
         //Applied the given discount code to the current cart
         //  Params  -> discountCode: The discount code to apply
@@ -179,7 +184,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             }
 
             //Wait until the remove discount link is gone
-            new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count); //TODO, make helper method
+            GetWaitObject(_driver).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);
             //WaitForValueChange(_driver, 0, _driver.FindElements(By.LinkText("[Remove]")).Count);
 
             int count = _removeFromCartButtons.Count;
@@ -189,7 +194,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                 count--;
 
                 //Wait until the number of remove product buttons has decreased by 1
-                new WebDriverWait(_driver, TimeSpan.FromSeconds(4)).Until(drv => count == _removeFromCartButtons.Count);    //TODO, make helper method
+                GetWaitObject(_driver).Until(drv => count == _removeFromCartButtons.Count);
                 //WaitForValueChange(_driver, count, _removeFromCartButtons.Count);
             }
 

@@ -137,7 +137,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 Assert.That(actualDiscount, Is.EqualTo(expectedDiscount), "Incorrect discount applied");
                 state = "Pass";
             }
-            catch (AssertionException)   //TODO > Catch Assert exceptions only
+            catch (AssertionException)
             {
                 //Do nothing
                 state = "Fail";
@@ -150,17 +150,17 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");
                 state = "Pass";
             }
-            catch (AssertionException)   //TODO > Catch Assert exceptions only
+            catch (AssertionException)
             {
                 //Do nothing
                 state = "Fail";
             }
             Console.WriteLine($"Final subtotal -> {state}\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
 
-            //TODO, each test overwrites the last one since they are all given the same name, define test name in screenshot name
             // Screenshot the cart summary
-            ScrollToElement(_driverWrapper.Driver, _driverWrapper.Driver.FindElement(By.ClassName("order-total")));     //TODO, move locator or make class for screenshots and move to that
-            TakeScreenshot(_driverWrapper.Driver, "TestCase1_CartSummary", "Cart summary page");
+            cartPage.ScrollToOrderTotal();
+            string screenshotName = ValidFileNameFromTest("CartSummary");
+            TakeScreenshot(_driverWrapper.Driver, screenshotName, "Cart summary page");
         }
 
 
@@ -238,7 +238,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             //TODO, maybe verify if an order was created successfully?
 
             // Screenshot order summary page
-            TakeScreenshot(_driverWrapper.Driver, "TestCase2_OrderSummary", "New Order summary page");
+            string screenshotName = ValidFileNameFromTest("OrderSummary");
+            TakeScreenshot(_driverWrapper.Driver, screenshotName, "New Order summary page");
         }
 
         [Then(@"our account records this new order")]
@@ -272,7 +273,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //TODO, each test overwrites the last one since they are all given the same name, define test name in screenshot name
             // Screenshot listed account orders
-            TakeScreenshot(_driverWrapper.Driver, "TestCase2_AccountOrderList", "List of recent account orders");
+            string screenshotName = ValidFileNameFromTest("AccountOrderList");
+            TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
         }
     }
 }
