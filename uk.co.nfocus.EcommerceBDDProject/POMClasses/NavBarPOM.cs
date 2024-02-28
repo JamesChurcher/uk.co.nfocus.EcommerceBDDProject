@@ -66,7 +66,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         // Go to account page
         public void GoAccount()
         {
-            _accountButton.Click();
+            //Loop over button click - sometimes logout can be flakey
+            for (int i = 0; i < 10; i++)
+            {
+                _accountButton.Click();
+                if (_driver.Url.Contains("my-account"))
+                {
+                    break;
+                }
+                Thread.Sleep(50);
+            }
             WaitForUrlSubstring(_driver, "my-account"); //Wait for account page to load
         }
 

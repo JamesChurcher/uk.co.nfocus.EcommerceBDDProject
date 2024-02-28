@@ -89,6 +89,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         {
             //Get navbar object from session
             NavBarPOM navbar = (NavBarPOM)_scenarioContext["NavBarPOMObject"];
+            //NavBarPOM navbar = new(_driverWrapper);
 
             //Navigate back to the cart to clear it
             navbar.GoCart();
@@ -98,8 +99,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             //Remove the discount and products if they exist
             cartPage.MakeCartEmpty();
             Console.WriteLine("Removed items from cart");
-
-            Thread.Sleep(1000); //Small sleep to stop flakeyness of navbar click
 
             //Navigate to my account to log out
             navbar.GoAccount();

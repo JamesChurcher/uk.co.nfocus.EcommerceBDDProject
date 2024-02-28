@@ -264,14 +264,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             {
                 Assert.That(isOrderCreated, "Order not in set");
             }
-            catch (AssertionException)   //TODO > Catch Assert exceptions only
+            catch (AssertionException)
             {
                 //Do nothing
             }
             Console.WriteLine($"Is the new order listed under account? {isOrderCreated}");
 
 
-            //TODO, each test overwrites the last one since they are all given the same name, define test name in screenshot name
             // Screenshot listed account orders
             string screenshotName = ValidFileNameFromTest("AccountOrderList");
             TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
