@@ -1,21 +1,22 @@
 ﻿Feature: CheckoutSystem
-To see if the user can purchase from the website
-we want to see if features of the cart and checkout system
-function as intended.
+As a potential customer
+I want to be able to apply discounts, checkout, and view my orders
+So that I can make and keep track of my purchases.
 
-Background: 
-Making sure each scenario is tested while logged into an account.
+Background:
+Assure each scenario is run while logged into an account.
 	Given we are logged in
 	  And we are on the shop page
 
 @TestCase1
 Scenario Outline: Apply discount to the cart
-Add some provided items to the cart and apply a 15% discount.
+The correct discount should be applied to the cart total when a
+coupon code is accepted.
 
 	Given we add '<quantity>' of '<item>' to the cart
 	  And we are viewing the cart page
 	 When a discount code 'edgewords' is applied
-	 Then 10% is subtracted from the total
+	 Then 15% is subtracted from the total
 
 	 Examples: 
 	 | item       | quantity |
@@ -26,8 +27,8 @@ Add some provided items to the cart and apply a 15% discount.
 
 @TestCase2
 Scenario: Checkout cart and create an order
-Checkout and create an order and that the order appears under the
-accounts list of orders.
+Newly created order number should be visible when listing the
+orders on the account.
 
 	Given we have items in the cart
 	  And we are viewing the checkout page
