@@ -35,8 +35,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CheckoutSystem", "To see if the user can purchase from the website\r\nwe want to see if features of t" +
-                    "he cart and checkout system\r\nfunction as intended.", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CheckoutSystem", "As a potential customer\r\nI want to be able to apply discounts, checkout, and view" +
+                    " my orders\r\nSo that I can make and keep track of my purchases.", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -105,7 +105,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Features
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("item", item);
             argumentsOfScenario.Add("quantity", quantity);
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Apply discount to the cart", "Add some provided items to the cart and apply a 15% discount.", tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Apply discount to the cart", "The correct discount should be applied to the cart total when a\r\ncoupon code is a" +
+                    "ccepted.", tagsOfScenario, argumentsOfScenario, featureTags);
 #line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -119,17 +120,17 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-#line 15
+#line 16
  testRunner.Given(string.Format("we add \'{0}\' of \'{1}\' to the cart", quantity, item), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 16
+#line 17
    testRunner.And("we are viewing the cart page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 17
+#line 18
   testRunner.When("a discount code \'edgewords\' is applied", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 18
-  testRunner.Then("10% is subtracted from the total", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 19
+  testRunner.Then("15% is subtracted from the total", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -143,9 +144,9 @@ this.FeatureBackground();
             string[] tagsOfScenario = new string[] {
                     "TestCase2"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Checkout cart and create an order", "Checkout and create an order and that the order appears under the\r\naccounts list " +
-                    "of orders.", tagsOfScenario, argumentsOfScenario, featureTags);
-#line 28
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Checkout cart and create an order", "Newly created order number should be visible when listing the\r\norders on the acco" +
+                    "unt.", tagsOfScenario, argumentsOfScenario, featureTags);
+#line 29
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -158,10 +159,10 @@ this.ScenarioInitialize(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-#line 32
+#line 33
  testRunner.Given("we have items in the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 33
+#line 34
    testRunner.And("we are viewing the checkout page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -191,13 +192,13 @@ this.FeatureBackground();
                 table1.AddRow(new string[] {
                             "paymentMethod",
                             "cheque"});
-#line 34
+#line 35
   testRunner.When("a purchase is completed with billing information", ((string)(null)), table1, "When ");
 #line hidden
-#line 44
+#line 45
   testRunner.Then("a new order is created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 45
+#line 46
    testRunner.And("our account records this new order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
