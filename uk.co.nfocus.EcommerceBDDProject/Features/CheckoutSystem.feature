@@ -8,13 +8,14 @@ Making sure each scenario is tested while logged into an account.
 	Given we are logged in
 	  And we are on the shop page
 
+@TestCase1
 Scenario Outline: Apply discount to the cart
 Add some provided items to the cart and apply a 15% discount.
 
 	Given we add '<quantity>' of '<item>' to the cart
 	  And we are viewing the cart page
 	 When a discount code 'edgewords' is applied
-	 Then 15% is subtracted from the total
+	 Then 10% is subtracted from the total
 
 	 Examples: 
 	 | item       | quantity |
@@ -23,6 +24,7 @@ Add some provided items to the cart and apply a 15% discount.
 	 | Cap,Hoodie | 1        |
 	 | Hoodie     | 8        |
 
+@TestCase2
 Scenario: Checkout cart and create an order
 Checkout and create an order and that the order appears under the
 accounts list of orders.

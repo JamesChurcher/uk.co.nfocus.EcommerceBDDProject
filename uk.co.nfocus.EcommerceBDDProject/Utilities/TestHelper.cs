@@ -15,7 +15,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
     {
         //private static string _screenshotPath = @"C:\Users\JamesChurcher\OneDrive - nFocus Limited\Pictures\Screenshots\";
         //public static string ScreenshotPath => _screenshotPath;
-        private static string _screenshotPath = Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\";
+        //private static string _screenshotPath = Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\";
+        private static string _screenshotPath = new Uri(Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\").AbsolutePath;
 
         //Enums for payment methods
         public enum PaymentMethod
@@ -77,15 +78,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         }
 
         // Take screenshot
-        public static void TakeScreenshot(IWebDriver driver, string name, string description)
+        public static string TakeScreenshot(IWebDriver driver, string name, string description)
         {
             var path = _screenshotPath + name + ".png";
 
             ITakesScreenshot ssdriver = driver as ITakesScreenshot;
-            Screenshot screenshot = ssdriver.GetScreenshot();
-            screenshot.SaveAsFile(path);
+            ssdriver.GetScreenshot().SaveAsFile(path);
 
             TestContext.AddTestAttachment(path, description);
+
+            return path;
         }
 
         // Scroll the given element into view

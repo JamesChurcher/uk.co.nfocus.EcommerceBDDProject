@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 
@@ -16,13 +17,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
     internal class Hooks
     {
         private readonly ScenarioContext _scenarioContext;
-
         private WebDriverWrapper _driverWrapper;
+        private readonly ISpecFlowOutputHelper _outputHelper;
 
-        public Hooks(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
+        public Hooks(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper, ISpecFlowOutputHelper outputHelper)
         {
             _scenarioContext = scenarioContext;
             _driverWrapper = driverWrapper;
+            _outputHelper = outputHelper;
         }
 
         [Before]

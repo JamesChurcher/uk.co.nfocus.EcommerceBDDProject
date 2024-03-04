@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics.Metrics;
 using System.IO;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
@@ -14,18 +15,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
     public class CheckoutSystemStepDefinitions
     {
         private readonly ScenarioContext _scenarioContext;
-
-        //private IWebDriver _driver; //TODO > Make wrapper
         private WebDriverWrapper _driverWrapper;
+        private readonly ISpecFlowOutputHelper _outputHelper;
 
         private NavBarPOM _navBar;
 
-        //private const decimal couponWorth = 0.15M;
-
-        public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper)
+        public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper, ISpecFlowOutputHelper outputHelper)
         {
             _scenarioContext = scenarioContext;
             _driverWrapper = driverWrapper;
+            _outputHelper = outputHelper;
         }
 
 
@@ -139,7 +138,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //Verification
             // Assess coupon removes 15%
-            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied");     //Verify coupon amount
+            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
             Console.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
 
             // Assess final total is correct
@@ -149,7 +148,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             // Screenshot the cart summary
             cartPage.ScrollToOrderTotal();
             string screenshotName = ValidFileNameFromTest("CartSummary");
-            TakeScreenshot(_driverWrapper.Driver, screenshotName, "Cart summary page");
+            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "Cart summary page");
+            _outputHelper.AddAttachment(imagePath);
         }
 
 
@@ -165,14 +165,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Select three random items to add to the cart
             Random rnd = new();
-            int randomIntex;
+            int randomIndex;
 
             // Add three random items to the cart
             for (int i = 0; i < 3; i++)
             {
-                randomIntex = rnd.Next(productNames.Count());
-                shopPage.ClickAddToBasket(productNames[randomIntex]);
-                Console.WriteLine($"Added {productNames[randomIntex]} to the basket");
+                randomIndex = rnd.Next(productNames.Count());
+                shopPage.ClickAddToBasket(productNames[randomIndex]);
+                Console.WriteLine($"Added {productNames[randomIndex]} to the basket");
             }
 
             Console.WriteLine("Add product to cart");
@@ -228,7 +228,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Screenshot order summary page
             string screenshotName = ValidFileNameFromTest("OrderSummary");
-            TakeScreenshot(_driverWrapper.Driver, screenshotName, "New Order summary page");
+            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "New Order summary page");
+            _outputHelper.AddAttachment(imagePath);
         }
 
         [Then(@"our account records this new order")]
@@ -249,13 +250,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);    //TODO, maybe move comparison outside of POM so we get the actual order number
 
             // Assess if previously created order is listed under this account
-            Assert.That(isOrderCreated, "Order not in set");
+            Assert.That(isOrderCreated, "Created order not listed under this account");
             Console.WriteLine($"Is the new order listed under account? {isOrderCreated}");
 
 
             // Screenshot listed account orders
             string screenshotName = ValidFileNameFromTest("AccountOrderList");
-            TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
+            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
+            _outputHelper.AddAttachment(imagePath);
         }
     }
 }
