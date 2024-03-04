@@ -17,7 +17,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             this._driver = driverWrapper.Driver;  //Provide driver
 
-            Assert.That(_driver.FindElement(By.LinkText("Edgewords Shop")),
+            Assert.That(_driver.FindElement(By.LinkText("nFocus Shop")),
                         Is.Not.Null, 
                         "Not in the edgewords shop or navbar not available");    //Verify we are on the correct website
         }

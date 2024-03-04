@@ -55,6 +55,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             bool loginStatus = loginPage.LoginExpectSuccess(testUsername, testPassword);
             Assert.That(loginStatus, "Could not login");   //Verify successful login
             Console.WriteLine("Login complete");
+
+            // Clear cart
+            _navBar.GoCart();
+            CartPagePOM cartPage = new(_driverWrapper);
+            cartPage.MakeCartEmpty();
         }
 
         [Given(@"we are on the shop page")]
@@ -124,8 +129,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Decimal shippingCost = cartPage.GetShippingCost();
 
             // Calculate actual and expected discounts
-            Decimal expectedDiscount = subtotal * couponWorth;          // Calculate expected discount amount
-            Decimal actualDiscount = cartPage.GetAppliedDiscount();     // Get actual discount amount
+            //Decimal expectedDiscount = subtotal * couponWorth;          // Calculate expected discount amount
+            Decimal actualDiscount = cartPage.GetAppliedDiscount() / subtotal;     // Get actual discount amount
 
             // Caculate actual and expected totals
             Decimal expectedTotal = (subtotal * (1 - couponWorth)) + shippingCost;
@@ -134,31 +139,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //Verification
             // Assess coupon removes 15%
-            string state = "";
-            try     //Verify coupon amount
-            {
-                Assert.That(actualDiscount, Is.EqualTo(expectedDiscount), "Incorrect discount applied");
-                state = "Pass";
-            }
-            catch (AssertionException)
-            {
-                //Do nothing
-                state = "Fail";
-            }
-            Console.WriteLine($"15% discount amount -> {state}\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
+            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied");     //Verify coupon amount
+            Console.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
 
             // Assess final total is correct
-            try     //Verify final subtotal
-            {
-                Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");
-                state = "Pass";
-            }
-            catch (AssertionException)
-            {
-                //Do nothing
-                state = "Fail";
-            }
-            Console.WriteLine($"Final subtotal -> {state}\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
+            Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");      //Verify final subtotal
+            Console.WriteLine($"Final subtotal ->\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
 
             // Screenshot the cart summary
             cartPage.ScrollToOrderTotal();
@@ -263,14 +249,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);    //TODO, maybe move comparison outside of POM so we get the actual order number
 
             // Assess if previously created order is listed under this account
-            try
-            {
-                Assert.That(isOrderCreated, "Order not in set");
-            }
-            catch (AssertionException)
-            {
-                //Do nothing
-            }
+            Assert.That(isOrderCreated, "Order not in set");
             Console.WriteLine($"Is the new order listed under account? {isOrderCreated}");
 
 
