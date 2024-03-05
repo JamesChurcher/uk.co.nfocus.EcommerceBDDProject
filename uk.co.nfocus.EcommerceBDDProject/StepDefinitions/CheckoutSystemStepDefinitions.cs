@@ -45,7 +45,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Navigate to account login page
             _navBar.GoAccount();
-            Console.WriteLine("Navigated to login page");
+            _outputHelper.WriteLine("Navigated to login page");
 
             // Login to said account
             AccountPagePOM loginPage = new(_driverWrapper);
@@ -53,7 +53,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             //Provide username, password, and click
             bool loginStatus = loginPage.LoginExpectSuccess(testUsername, testPassword);
             Assert.That(loginStatus, "Could not login");   //Verify successful login
-            Console.WriteLine("Login complete");
+            _outputHelper.WriteLine("Login complete");
 
             // Clear cart
             _navBar.GoCart();
@@ -66,7 +66,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             // Enter the shop
             _navBar.GoShop();
-            Console.WriteLine("Navigated to shop");
+            _outputHelper.WriteLine("Navigated to shop");
         }
 
 
@@ -74,23 +74,25 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         [Given(@"we add '([^']*)' of '([^']*)' to the cart")]
         public void GivenWeAddOfToTheCart(int quantity, string product)
         {
-            Console.WriteLine($"Provide a quantity {quantity} of product {product}");
+            _outputHelper.WriteLine($"Provide a quantity {quantity} of product {product}");
 
             // Add to basket
             ShopPagePOM shopPage = new(_driverWrapper);
 
             // If given a list of products, seperate them and loop over each one
-            foreach(string item in product.Split(','))
+            foreach (string item in product.Split(','))
             {
                 // Add the given quantity of product to cart
                 for (int i = quantity; i > 0; i--)
                 {
                     //Console.WriteLine("loop over cart i " + i);
                     shopPage.ClickAddToBasket(item);
+
+                    _outputHelper.WriteLine($"Added {item} to the basket");
                 }
             }
 
-            Console.WriteLine("Add product to cart");
+            _outputHelper.WriteLine("Products added to cart");
         }
 
         [Given(@"we are viewing the cart page")]
@@ -98,19 +100,24 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             // View cart
             _navBar.GoCart();
-            Console.WriteLine("Navigated to cart");
+            _outputHelper.WriteLine("Navigated to cart");
         }
 
         [When(@"a discount code '([^']*)' is applied")]
         public void WhenADiscountCodeIsApplied(string testDiscountCode)
         {
+            _outputHelper.WriteLine($"Attempt to apply code: {testDiscountCode}");
+
             // Apply coupon
             CartPagePOM cartPage = new(_driverWrapper);
-            _scenarioContext["CartPagePOMObject"] = cartPage;
 
             bool discountStatus = cartPage.ApplyDiscountExpectSuccess(testDiscountCode);
-            Assert.That(discountStatus, "Could not apply discount");   //Verify discount was applied
-            Console.WriteLine("Applied coupon code");
+            //Assert.That(discountStatus, "Could not apply discount");   //Verify discount was applied
+
+            if (discountStatus)
+                _outputHelper.WriteLine("Applied discount code");
+            else
+                _outputHelper.WriteLine("Could not apply discount code");
         }
 
         [Then(@"(.*)% is subtracted from the total")]
@@ -136,20 +143,21 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Decimal actualTotal = cartPage.GetCartTotal();
 
 
-            //Verification
-            // Assess coupon removes 15%
-            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
-            Console.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
-
-            // Assess final total is correct
-            Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");      //Verify final subtotal
-            Console.WriteLine($"Final subtotal ->\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
-
             // Screenshot the cart summary
             cartPage.ScrollToOrderTotal();
             string screenshotName = ValidFileNameFromTest("CartSummary");
             string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "Cart summary page");
-            _outputHelper.AddAttachment(imagePath);
+            _outputHelper.AddAttachment(@"file:///" + imagePath);
+
+
+            //Verification
+            // Assess coupon removes 15%
+            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
+            _outputHelper.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
+
+            // Assess final total is correct
+            Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");      //Verify final subtotal
+            _outputHelper.WriteLine($"Final subtotal ->\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
         }
 
 
@@ -172,10 +180,10 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             {
                 randomIndex = rnd.Next(productNames.Count());
                 shopPage.ClickAddToBasket(productNames[randomIndex]);
-                Console.WriteLine($"Added {productNames[randomIndex]} to the basket");
+                _outputHelper.WriteLine($"Added {productNames[randomIndex]} to the basket");
             }
 
-            Console.WriteLine("Add product to cart");
+            _outputHelper.WriteLine("Products added to cart");
         }
 
         [Given(@"we are viewing the checkout page")]
@@ -183,7 +191,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             // Go to checkout
             _navBar.GoCheckout();
-            Console.WriteLine("Navigated to checkout");
+            _outputHelper.WriteLine("Navigated to checkout");
         }
 
         [When(@"a purchase is completed with billing information")]
@@ -202,7 +210,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Enter billing information
             CheckoutPagePOM checkoutPage = new(_driverWrapper);
-            Console.WriteLine("Enter billing information");
+            _outputHelper.WriteLine("Enter billing information");
 
             checkoutPage.CheckoutExpectSuccess(
                 billInfoDict["firstName"], 
@@ -222,14 +230,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             OrderPagePOM orderPage = new(_driverWrapper);
             string orderNumber = orderPage.GetOrderNumber();
             _scenarioContext["OrderNumber"] = orderNumber;
-            Console.WriteLine($"New order number is {orderNumber}");
-
-            //TODO, maybe verify if an order was created successfully?
+            _outputHelper.WriteLine($"New order number is {orderNumber}");
 
             // Screenshot order summary page
             string screenshotName = ValidFileNameFromTest("OrderSummary");
             string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "New Order summary page");
-            _outputHelper.AddAttachment(imagePath);
+            _outputHelper.AddAttachment(@"file:///" + imagePath);
         }
 
         [Then(@"our account records this new order")]
@@ -237,7 +243,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         {
             // Go to my account
             _navBar.GoAccount();
-            Console.WriteLine("Navigated to account page");
+            _outputHelper.WriteLine("Navigated to account page");
 
             string orderNumber = (string)_scenarioContext["OrderNumber"];
 
@@ -249,15 +255,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             OrderListPagePOM orderListPage = new(_driverWrapper);
             bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);    //TODO, maybe move comparison outside of POM so we get the actual order number
 
-            // Assess if previously created order is listed under this account
-            Assert.That(isOrderCreated, "Created order not listed under this account");
-            Console.WriteLine($"Is the new order listed under account? {isOrderCreated}");
-
 
             // Screenshot listed account orders
             string screenshotName = ValidFileNameFromTest("AccountOrderList");
             string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
-            _outputHelper.AddAttachment(imagePath);
+            _outputHelper.AddAttachment(@"file:///" + imagePath);
+
+
+            // Assess if previously created order is listed under this account
+            Assert.That(isOrderCreated, "Created order not listed under this account");
+            _outputHelper.WriteLine($"Is the new order listed under account? {isOrderCreated}");
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using TechTalk.SpecFlow.Infrastructure;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
@@ -109,6 +110,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             string myString = TestContext.CurrentContext.Test.Name + "_" + text;
             myString = myString.Replace("\"", "");
             return myString;
+        }
+
+        // Output to Console and Livingdoc api
+        public static void WriteLine(string text, ISpecFlowOutputHelper logger)
+        {
+            Console.WriteLine(text);
+            logger.WriteLine(text);
         }
 
 

@@ -32,7 +32,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         {
             // Get environment variables
             string browser = Environment.GetEnvironmentVariable("BROWSER");
-            Console.WriteLine($"Browser is set to: {browser}");
+            _outputHelper.WriteLine($"Browser is set to: {browser}");
 
             // Get username and password and make available during test
             string username = Environment.GetEnvironmentVariable("USERNAME");
@@ -48,18 +48,18 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             }
             else
             {
-                Console.WriteLine("Username and Password have been set");
+                _outputHelper.WriteLine("Username and Password have been set");
             }
 
             // Get the url of the website
             string webUrl = TestContext.Parameters["WebAppUrl"];
-            Console.WriteLine("The website url is " + webUrl);
+            _outputHelper.WriteLine("The website url is " + webUrl);
 
             // Default to Edge if browser env is null
             if (browser == null)
             {
                 browser = "edge";
-                Console.WriteLine("BROWSER env not set: Setting default to edge");
+                _outputHelper.WriteLine("BROWSER env not set: Setting default to edge");
             }
 
             //Instantiate a browser based on variable
@@ -80,7 +80,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
 
             // Go to shop url
             _driverWrapper.Driver.Navigate().GoToUrl(webUrl);
-            Console.WriteLine("Navigated to site");
+            _outputHelper.WriteLine("Navigated to site");
         }
 
         [After]
@@ -97,7 +97,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
 
             //Remove the discount and products if they exist
             cartPage.MakeCartEmpty();
-            Console.WriteLine("Removed items from cart");
+            _outputHelper.WriteLine("Removed items from cart");
 
             //Navigate to my account to log out
             navbar.GoAccount();
@@ -107,9 +107,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             bool logoutStatus = accountPage.LogoutExpectSuccess();
             Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
 
-            Console.WriteLine("Logout from account");
+            _outputHelper.WriteLine("Logout from account");
 
-            Console.WriteLine("--Test Complete!--");
+            _outputHelper.WriteLine("--Test Complete!--");
 
             // Quit and dispose of driver
             _driverWrapper.Driver.Quit();
