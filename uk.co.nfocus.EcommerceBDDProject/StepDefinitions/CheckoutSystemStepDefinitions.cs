@@ -135,8 +135,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Decimal shippingCost = cartPage.GetShippingCost();
 
             // Calculate actual and expected discounts
-            //Decimal expectedDiscount = subtotal * couponWorth;          // Calculate expected discount amount
-            Decimal actualDiscount = cartPage.GetAppliedDiscount() / subtotal;     // Get actual discount amount
+            Decimal discountDeduction = cartPage.GetAppliedDiscount();     // Get actual discount amount
 
             // Caculate actual and expected totals
             Decimal expectedTotal = (subtotal * (1 - couponWorth)) + shippingCost;
@@ -150,14 +149,23 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             _outputHelper.AddAttachment(@"file:///" + imagePath);
 
 
+            // Report testing information
+            _outputHelper.WriteLine(
+                $"Subtotal is £{subtotal.ToString("#.##")}\n" +
+                $"Deduction is £{discountDeduction.ToString("#.##")}\n" +
+                $"Expected discount is {couponWorth * 100}%\n" +
+                $"Actual discount applied is {discountDeduction/subtotal*100}%");
+            _outputHelper.WriteLine(
+                $"Shipping is £{shippingCost.ToString("#.##")}\n" +
+                $"Expected total is £{expectedTotal.ToString("#.##")}\n" +
+                $"Actual total is £{actualTotal.ToString("#.##")}");
+
             //Verification
             // Assess coupon removes 15%
-            Assert.That(actualDiscount, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
-            _outputHelper.WriteLine($"15% discount amount ->\n\tExpected: £{actualDiscount}, Actual: £{actualDiscount}");
+            Assert.That(discountDeduction / subtotal, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
 
             // Assess final total is correct
             Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");      //Verify final subtotal
-            _outputHelper.WriteLine($"Final subtotal ->\n\tExpected: £{expectedTotal}, Actual: £{actualTotal}");
         }
 
 
@@ -221,6 +229,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 billInfoDict["postcode"], 
                 billInfoDict["phoneNumber"], 
                 method);
+
+            _outputHelper.WriteLine("Order submitted");
         }
 
         [Then(@"a new order is created")]
@@ -230,7 +240,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             OrderPagePOM orderPage = new(_driverWrapper);
             string orderNumber = orderPage.GetOrderNumber();
             _scenarioContext["OrderNumber"] = orderNumber;
-            _outputHelper.WriteLine($"New order number is {orderNumber}");
+            _outputHelper.WriteLine($"New order number is #{orderNumber}");
 
             // Screenshot order summary page
             string screenshotName = ValidFileNameFromTest("OrderSummary");
@@ -253,8 +263,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             // Check if the new order is listed under this account
             OrderListPagePOM orderListPage = new(_driverWrapper);
-            bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);    //TODO, maybe move comparison outside of POM so we get the actual order number
-
+            bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);
 
             // Screenshot listed account orders
             string screenshotName = ValidFileNameFromTest("AccountOrderList");
@@ -263,8 +272,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Assess if previously created order is listed under this account
+            if (isOrderCreated)
+                _outputHelper.WriteLine($"Order #{orderNumber} is recorded under this account");
+            else
+                _outputHelper.WriteLine($"No order #{orderNumber} is recorded under this account");
+
             Assert.That(isOrderCreated, "Created order not listed under this account");
-            _outputHelper.WriteLine($"Is the new order listed under account? {isOrderCreated}");
         }
     }
 }
