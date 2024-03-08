@@ -70,11 +70,19 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             //Loop over button click - sometimes logout can be flakey
             for (int i = 0; i < 10; i++)
             {
-                _accountButton.Click();
-                if (_driver.Url.Contains("my-account"))
+                try
                 {
-                    break;
+                    _accountButton.Click();
+                    if (_driver.Url.Contains("my-account"))
+                    {
+                        break;
+                    }
                 }
+                catch (ElementClickInterceptedException)
+                {
+                    //Do nothing - Catch interception error if account click fails
+                }
+
                 Thread.Sleep(50);
             }
             WaitForUrlSubstring(_driver, "my-account"); //Wait for account page to load

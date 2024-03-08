@@ -52,7 +52,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //Provide username, password, and click
             bool loginStatus = loginPage.LoginExpectSuccess(testUsername, testPassword);
-            Assert.That(loginStatus, "Could not login");   //Verify successful login
+            Assert.That(loginStatus, "Could not login");   //Verify successful login        //TODO, Remove assert
             _outputHelper.WriteLine("Login complete");
 
             // Clear cart
@@ -264,6 +264,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             // Check if the new order is listed under this account
             OrderListPagePOM orderListPage = new(_driverWrapper);
             bool isOrderCreated = orderListPage.CheckIfOrderInOrderNumbers(orderNumber);
+
 
             // Screenshot listed account orders
             string screenshotName = ValidFileNameFromTest("AccountOrderList");
