@@ -1,15 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
@@ -68,7 +58,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             _removeDiscountButton.Click();
         }
-        
+
         //Remove the top item from the cart
         public void ClickRemoveItemButton()
         {

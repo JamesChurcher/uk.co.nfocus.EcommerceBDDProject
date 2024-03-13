@@ -1,14 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using uk.co.nfocus.EcommerceBDDProject.POCOClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
@@ -38,13 +31,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
         //Payment method
         private IWebElement _paymentMethodRadio => _driver.FindElement(By.ClassName("payment_methods"));    //Payment method parent element
-        
+
         //Get element from the given enum that defines which payment method to select
         //  Param  -> (PaymentMethod) method: The payment method to use during checkout
         //  Return -> (IWebElement) the element that, when clicked, sets the desired payment method
-        private IWebElement _GetChildPaymentMethod(PaymentMethod method) 
-        { 
-            return _paymentMethodRadio.FindElement(By.CssSelector($".payment_method_{method} > label")); 
+        private IWebElement _GetChildPaymentMethod(PaymentMethod method)
+        {
+            return _paymentMethodRadio.FindElement(By.CssSelector($".payment_method_{method} > label"));
         }
 
         private IWebElement _placeOrderButton => _driver.FindElement(By.Id("place_order"));     //Place order button
@@ -104,7 +97,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         // Select payment method from radio buttons
         public CheckoutPagePOM SelectPaymentMethod(PaymentMethod method)
         {
-            
+
 
             //Loop over radio click until it is loaded
             for (int i = 0; i < 15; i++)
@@ -154,7 +147,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             SelectPaymentMethod(billingDetails.paymentMethod);
 
             //Loop over button click until it is loaded onto page
-            for (int i=0; i<15; i++)
+            for (int i = 0; i < 15; i++)
             {
                 try
                 {

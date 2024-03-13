@@ -1,13 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using uk.co.nfocus.EcommerceBDDProject.Utilities;
-using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -19,8 +11,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             this._driver = driverWrapper.Driver;  //Provide driver
 
-            Assert.That(_driver.Url, 
-                        Does.Contain("my-account/orders"), 
+            Assert.That(_driver.Url,
+                        Does.Contain("my-account/orders"),
                         "Not on the account order list page");   //Verify we are on the correct page
         }
 
@@ -37,7 +29,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             var orderNumbers = _allOrderNumbers;
 
-            foreach(var order in orderNumbers)
+            foreach (var order in orderNumbers)
             {
                 //Console.WriteLine($"Does current order {order.Text} contain {orderNumber}");
                 if (order.Text.Contains(orderNumber))

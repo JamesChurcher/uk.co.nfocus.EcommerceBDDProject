@@ -1,9 +1,4 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
@@ -28,7 +23,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         public string GetOrderNumber()
         {
             var orderNumber = _orderNumberLabel.Text;
-            return orderNumber.Substring(orderNumber.IndexOf("\n")+1);
+            return orderNumber.Substring(orderNumber.IndexOf("\n") + 1);
         }
     }
 }

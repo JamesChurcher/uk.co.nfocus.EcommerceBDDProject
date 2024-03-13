@@ -1,12 +1,5 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
@@ -19,8 +12,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             this._driver = driverWrapper.Driver;  //Provide driver
 
-            Assert.That(_driver.Url, 
-                        Does.Contain("my-account"), 
+            Assert.That(_driver.Url,
+                        Does.Contain("my-account"),
                         "Not on the account page");   //Verify we are on the correct page
         }
 

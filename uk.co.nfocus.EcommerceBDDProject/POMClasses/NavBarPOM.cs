@@ -1,9 +1,4 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
@@ -18,7 +13,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             this._driver = driverWrapper.Driver;  //Provide driver
 
             Assert.That(_driver.FindElement(By.LinkText("nFocus Shop")),
-                        Is.Not.Null, 
+                        Is.Not.Null,
                         "Not in the edgewords shop or navbar not available");    //Verify we are on the correct website
         }
 
