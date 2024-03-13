@@ -1,4 +1,6 @@
+using TechTalk.SpecFlow.Assist;
 using TechTalk.SpecFlow.Infrastructure;
+using uk.co.nfocus.EcommerceBDDProject.POCOClasses;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
@@ -9,7 +11,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
     public class CheckoutSystemStepDefinitions
     {
         private readonly ScenarioContext _scenarioContext;
-        private WebDriverWrapper _driverWrapper;
+        private readonly WebDriverWrapper _driverWrapper;
         private readonly ISpecFlowOutputHelper _outputHelper;
 
         private NavBarPOM _navBar;
@@ -135,17 +137,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             Decimal expectedTotal = (subtotal * (1 - couponWorth)) + shippingCost;
             Decimal actualTotal = cartPage.GetCartTotal();
 
+            // Get string representation of discount as percentage
+            string actualCouponWorth = (discountDeduction / subtotal * 100).ToString("0.############################") + "%";
+            string expectedCouponWorth = (couponWorth * 100).ToString("0.############################") + "%";
+
 
             // Screenshot the cart summary
-            //if (_screenshotToggle != ScreenshotToggle.None)
-            //{
-            //    cartPage.ScrollToOrderTotal();
-            //    string screenshotName = ValidFileNameFromTest("CartSummary");
-            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
-            //    TestContext.AddTestAttachment(imagePath, "Cart summary page");
-            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
-            //}
-
             cartPage.ScrollToOrderTotal();
             TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "CartSummary", "Cart summary page");
 
@@ -163,7 +160,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
             //Verification
             // Assess coupon removes 15%
-            Assert.That(discountDeduction / subtotal, Is.EqualTo(couponWorth), "Incorrect discount applied from coupon");     //Verify coupon amount
+            Assert.That(discountDeduction / subtotal, Is.EqualTo(couponWorth), $"Incorrect discount applied from coupon. Expected {expectedCouponWorth} but was {actualCouponWorth}");     //Verify coupon amount
 
             // Assess final total is correct
             Assert.That(actualTotal, Is.EqualTo(expectedTotal), "Final total subtotal incorrect");      //Verify final subtotal
@@ -205,31 +202,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         [When(@"a purchase is completed with billing information")]
         public void WhenAPurchaseIsCompletedWithBillingInformation(Table billInfoTable)
         {
-            // Create a dictionary from the table
-            Dictionary<string, string> billInfoDict = new();
-            foreach (var row in billInfoTable.Rows)
-            {
-                billInfoDict.Add(row[0], row[1]);
-            }
-
-            //Convert the payment method string to an enum
-            PaymentMethod method;
-            Enum.TryParse<PaymentMethod>(billInfoDict["paymentMethod"], out method);
+            // Create POCO instance from table
+            BillingDetailsPOCO billingDetails = billInfoTable.CreateInstance<BillingDetailsPOCO>();
 
             // Enter billing information
             CheckoutPagePOM checkoutPage = new(_driverWrapper);
             _outputHelper.WriteLine("Enter billing information");
 
-            checkoutPage.CheckoutExpectSuccess(
-                billInfoDict["firstName"],
-                billInfoDict["lastName"],
-                billInfoDict["country"],
-                billInfoDict["street"],
-                billInfoDict["city"],
-                billInfoDict["postcode"],
-                billInfoDict["phoneNumber"],
-                method);
-
+            checkoutPage.CheckoutExpectSuccess(billingDetails);
             _outputHelper.WriteLine("Order submitted");
         }
 
@@ -244,14 +224,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Screenshot order summary page
-            //if (_screenshotToggle != ScreenshotToggle.None)
-            //{
-            //    string screenshotName = ValidFileNameFromTest("OrderSummary");
-            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
-            //    TestContext.AddTestAttachment(imagePath, "New Order summary page");
-            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
-            //}
-
             TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "OrderSummary", "New Order summary page");
         }
 
@@ -274,14 +246,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Screenshot listed account orders
-            //if (_screenshotToggle != ScreenshotToggle.None)
-            //{
-            //    string screenshotName = ValidFileNameFromTest("AccountOrderList");
-            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
-            //    TestContext.AddTestAttachment(imagePath, "List of recent account orders");
-            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
-            //}
-
             TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "AccountOrderList", "List of recent account orders");
 
 
@@ -291,7 +255,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             else
                 _outputHelper.WriteLine($"No order #{orderNumber} is recorded under this account");
 
-            Assert.That(isOrderCreated, "Created order not listed under this account");
+            Assert.That(isOrderCreated, $"Created order #{orderNumber} not listed under this account");
         }
     }
 }

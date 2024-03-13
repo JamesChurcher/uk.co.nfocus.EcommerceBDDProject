@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using uk.co.nfocus.EcommerceBDDProject.POCOClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
@@ -136,21 +137,21 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
         //----- Higher level helpers -----
 
-        public void CheckoutExpectSuccess(string firstName, string lastName, string country, string street, string city, string postcode, string phoneNumber, PaymentMethod paymentMethod)
+        public void CheckoutExpectSuccess(BillingDetailsPOCO billingDetails)
         {
             // Set text field information
-            SetFirstName(firstName);
-            SetLastName(lastName);
-            SetStreetAddress(street);
-            SetCityField(city);
-            SetPostcodeField(postcode);
-            SetPhoneNumberField(phoneNumber);
+            SetFirstName(billingDetails.firstName);
+            SetLastName(billingDetails.lastName);
+            SetStreetAddress(billingDetails.street);
+            SetCityField(billingDetails.city);
+            SetPostcodeField(billingDetails.postcode);
+            SetPhoneNumberField(billingDetails.phoneNumber);
 
             // Select from dropdown
-            SelectCounrtyDropdown(country);
+            SelectCounrtyDropdown(billingDetails.country);
 
             // Select payment method
-            SelectPaymentMethod(paymentMethod);
+            SelectPaymentMethod(billingDetails.paymentMethod);
 
             //Loop over button click until it is loaded onto page
             for (int i=0; i<15; i++)
