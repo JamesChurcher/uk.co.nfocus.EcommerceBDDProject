@@ -30,7 +30,7 @@ Scenario: Checkout cart and create an order
 Newly created order number should be visible when listing the
 orders on the account.
 
-	Given we have items in the cart
+	Given we add 3 randomly chosen items to the cart
 	  And we are viewing the checkout page
 	 When a purchase is completed with billing information
 	 | field         | values              |

@@ -1,9 +1,3 @@
-using OpenQA.Selenium;
-using SpecFlow.Internal.Json;
-using System;
-using System.Diagnostics.Metrics;
-using System.IO;
-using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
@@ -19,16 +13,17 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         private readonly ISpecFlowOutputHelper _outputHelper;
 
         private NavBarPOM _navBar;
+        private ScreenshotToggle _screenshotToggle;
 
         public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper, ISpecFlowOutputHelper outputHelper)
         {
             _scenarioContext = scenarioContext;
             _driverWrapper = driverWrapper;
             _outputHelper = outputHelper;
+            _screenshotToggle = (ScreenshotToggle)scenarioContext["ScreenshotToggle"];
         }
 
 
-        //----- Background -----
         [Given(@"we are logged in")]
         public void GivenWeAreLoggedIn()
         {
@@ -70,7 +65,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         }
 
 
-        //----- Testcase 1 -----
         [Given(@"we add '([^']*)' of '([^']*)' to the cart")]
         public void GivenWeAddOfToTheCart(int quantity, string product)
         {
@@ -143,10 +137,17 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Screenshot the cart summary
+            //if (_screenshotToggle != ScreenshotToggle.None)
+            //{
+            //    cartPage.ScrollToOrderTotal();
+            //    string screenshotName = ValidFileNameFromTest("CartSummary");
+            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
+            //    TestContext.AddTestAttachment(imagePath, "Cart summary page");
+            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
+            //}
+
             cartPage.ScrollToOrderTotal();
-            string screenshotName = ValidFileNameFromTest("CartSummary");
-            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "Cart summary page");
-            _outputHelper.AddAttachment(@"file:///" + imagePath);
+            TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "CartSummary", "Cart summary page");
 
 
             // Report testing information
@@ -154,7 +155,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 $"Subtotal is £{subtotal.ToString("#.##")}\n" +
                 $"Deduction is £{discountDeduction.ToString("#.##")}\n" +
                 $"Expected discount is {couponWorth * 100}%\n" +
-                $"Actual discount applied is {discountDeduction/subtotal*100}%");
+                $"Actual discount applied is {discountDeduction / subtotal * 100}%");
             _outputHelper.WriteLine(
                 $"Shipping is £{shippingCost.ToString("#.##")}\n" +
                 $"Expected total is £{expectedTotal.ToString("#.##")}\n" +
@@ -169,9 +170,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         }
 
 
-        //----- Testcase 2 -----
-        [Given(@"we have items in the cart")]
-        public void GivenWeHaveItemsInTheCart()
+        [Given(@"we add (.*) randomly chosen items to the cart")]
+        public void GivenWeAddRandomlyChosenItemsToTheCart(int quantity)
         {
             // Add to basket
             ShopPagePOM shopPage = new(_driverWrapper);
@@ -184,7 +184,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             int randomIndex;
 
             // Add three random items to the cart
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < quantity; i++)
             {
                 randomIndex = rnd.Next(productNames.Count());
                 shopPage.ClickAddToBasket(productNames[randomIndex]);
@@ -221,13 +221,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             _outputHelper.WriteLine("Enter billing information");
 
             checkoutPage.CheckoutExpectSuccess(
-                billInfoDict["firstName"], 
-                billInfoDict["lastName"], 
-                billInfoDict["country"], 
-                billInfoDict["street"], 
-                billInfoDict["city"], 
-                billInfoDict["postcode"], 
-                billInfoDict["phoneNumber"], 
+                billInfoDict["firstName"],
+                billInfoDict["lastName"],
+                billInfoDict["country"],
+                billInfoDict["street"],
+                billInfoDict["city"],
+                billInfoDict["postcode"],
+                billInfoDict["phoneNumber"],
                 method);
 
             _outputHelper.WriteLine("Order submitted");
@@ -242,10 +242,17 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             _scenarioContext["OrderNumber"] = orderNumber;
             _outputHelper.WriteLine($"New order number is #{orderNumber}");
 
+
             // Screenshot order summary page
-            string screenshotName = ValidFileNameFromTest("OrderSummary");
-            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "New Order summary page");
-            _outputHelper.AddAttachment(@"file:///" + imagePath);
+            //if (_screenshotToggle != ScreenshotToggle.None)
+            //{
+            //    string screenshotName = ValidFileNameFromTest("OrderSummary");
+            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
+            //    TestContext.AddTestAttachment(imagePath, "New Order summary page");
+            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
+            //}
+
+            TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "OrderSummary", "New Order summary page");
         }
 
         [Then(@"our account records this new order")]
@@ -267,9 +274,15 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
 
 
             // Screenshot listed account orders
-            string screenshotName = ValidFileNameFromTest("AccountOrderList");
-            string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName, "List of recent account orders");
-            _outputHelper.AddAttachment(@"file:///" + imagePath);
+            //if (_screenshotToggle != ScreenshotToggle.None)
+            //{
+            //    string screenshotName = ValidFileNameFromTest("AccountOrderList");
+            //    string imagePath = TakeScreenshot(_driverWrapper.Driver, screenshotName);
+            //    TestContext.AddTestAttachment(imagePath, "List of recent account orders");
+            //    _outputHelper.AddAttachment(@"file:///" + imagePath);
+            //}
+
+            TakeScreenshotAndAddToContext(_screenshotToggle, _driverWrapper, _outputHelper, "AccountOrderList", "List of recent account orders");
 
 
             // Assess if previously created order is listed under this account

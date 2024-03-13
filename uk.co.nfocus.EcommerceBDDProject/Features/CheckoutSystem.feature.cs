@@ -160,7 +160,7 @@ this.ScenarioInitialize(scenarioInfo);
 this.FeatureBackground();
 #line hidden
 #line 33
- testRunner.Given("we have items in the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("we add 3 randomly chosen items to the cart", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 34
    testRunner.And("we are viewing the checkout page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");

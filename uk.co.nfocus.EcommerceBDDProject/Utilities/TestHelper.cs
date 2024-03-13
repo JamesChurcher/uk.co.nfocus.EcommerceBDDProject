@@ -1,22 +1,14 @@
-﻿using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using TechTalk.SpecFlow.Infrastructure;
+using uk.co.nfocus.EcommerceBDDProject.Support;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
     internal static class TestHelper
     {
-        //private static string _screenshotPath = @"C:\Users\JamesChurcher\OneDrive - nFocus Limited\Pictures\Screenshots\";
-        //public static string ScreenshotPath => _screenshotPath;
-        //private static string _screenshotPath = Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\";
         private static string _screenshotPath = new Uri(Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\").AbsolutePath;
 
         //Enums for payment methods
@@ -26,9 +18,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             cod
         }
 
+        public enum ScreenshotToggle
+        {
+            All,
+            //Failed,
+            None
+        }
+
         //----- Waits -----
         // Get a new driver wait object
-        public static WebDriverWait GetWaitObject(IWebDriver driver, int timeout=4)
+        public static WebDriverWait GetWaitObject(IWebDriver driver, int timeout = 4)
         {
             return new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
         }
@@ -47,16 +46,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             wait.Until(drv => drv.Url.Contains(urlSubstring));
         }
 
-        ////WARNING - does not work, actualNum should be an expression that is evaluated constantly during wait until
-        ////          but it is evaluated once on function call and therefore times out. Can you pass expression by reference?
-        ////Explicit wait for change in value
-        //public static void WaitForValueChange(IWebDriver driver, int expectedNum, int actualNum)
-        //{
-        //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(4));
-        //    wait.Until(drv => expectedNum == actualNum);
-        //}
-
-
+        //----- Type conversion helpers -----
         // Remove all non numerical characters from a string
         // Returns integer
         public static int StringToInt(string myString)
@@ -71,6 +61,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             return Decimal.Parse(myString, NumberStyles.AllowCurrencySymbol | NumberStyles.Number, new CultureInfo("en-GB"));
         }
 
+
         // Clears then sends string to given text field
         public static void ClearAndSendToTextField(IWebElement element, string myString)
         {
@@ -78,15 +69,15 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             element.SendKeys(myString);
         }
 
+
+        //----- File management -----
         // Take screenshot
-        public static string TakeScreenshot(IWebDriver driver, string name, string description)
+        public static string TakeScreenshot(IWebDriver driver, string name)
         {
             var path = _screenshotPath + name + ".png";
 
             ITakesScreenshot ssdriver = driver as ITakesScreenshot;
             ssdriver.GetScreenshot().SaveAsFile(path);
-
-            TestContext.AddTestAttachment(path, description);
 
             return path;
         }
@@ -97,7 +88,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             // Check if the driver supports JS
             IJavaScriptExecutor? jsdriver = driver as IJavaScriptExecutor;
 
-            if(jsdriver != null)
+            if (jsdriver != null)
             {
                 Thread.Sleep(1000);     // Could not get page to scroll without sleeping
                 jsdriver.ExecuteScript("arguments[0].scrollIntoView(false)", element);   // Scroll to element
@@ -112,26 +103,17 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             return myString;
         }
 
-        // Output to Console and Livingdoc api
-        public static void WriteLine(string text, ISpecFlowOutputHelper logger)
+        // Take screenshot and add to context
+        public static void TakeScreenshotAndAddToContext(ScreenshotToggle screenshotToggle, WebDriverWrapper driverWrapper, ISpecFlowOutputHelper outputHelper, string name, string description)
         {
-            Console.WriteLine(text);
-            logger.WriteLine(text);
+            if (screenshotToggle != ScreenshotToggle.All)
+                return;
+
+            string screenshotName = ValidFileNameFromTest(name);
+            string imagePath = TakeScreenshot(driverWrapper.Driver, screenshotName);
+
+            TestContext.AddTestAttachment(imagePath, description);
+            outputHelper.AddAttachment(@"file:///" + imagePath);
         }
-
-
-        // Get only the numerical characters from the text of a located web element
-        // Returns integer
-        //public static int EleToInt(IWebDriver driver, By locator)
-        //{
-        //    var text = driver.FindElement(locator).Text;
-        //    return StringToInt(text);
-        //}
-
-        //public static void SaveAndAttachScreenShot(Screenshot screenshot, string name, string description=null)
-        //{
-        //    screenshot.SaveAsFile($"{_screenshotPath}{name}.png");
-        //    TestContext.AddTestAttachment($"{_screenshotPath}{name}.png", description);
-        //}
     }
 }

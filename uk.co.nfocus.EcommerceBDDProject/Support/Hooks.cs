@@ -2,14 +2,9 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.POMClasses;
-using uk.co.nfocus.EcommerceBDDProject.Support;
+using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Support
 {
@@ -31,15 +26,9 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         public void Setup()
         {
             // Get environment variables
-            string browser = Environment.GetEnvironmentVariable("BROWSER");
-            _outputHelper.WriteLine($"Browser is set to: {browser}");
-
             // Get username and password and make available during test
             string username = Environment.GetEnvironmentVariable("USERNAME");
             string password = Environment.GetEnvironmentVariable("PASSWORD");
-
-            _scenarioContext["Username"] = username;
-            _scenarioContext["Password"] = password;
 
             // Check if runfile contains usernme and password
             if (username == null || password == null)
@@ -51,12 +40,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                 _outputHelper.WriteLine("Username and Password have been set");
             }
 
-            // Get the url of the website
-            string webUrl = TestContext.Parameters["WebAppUrl"];
-            _outputHelper.WriteLine("The website url is " + webUrl);
+            // Pass username and password to steps
+            _scenarioContext["Username"] = username;
+            _scenarioContext["Password"] = password;
+
+            // Get browser version to use
+            string browser = Environment.GetEnvironmentVariable("BROWSER");
+            _outputHelper.WriteLine($"Browser is set to: {browser}");
 
             // Default to Edge if browser env is null
-            if (browser == null)
+            if (string.IsNullOrEmpty(browser))
             {
                 browser = "edge";
                 _outputHelper.WriteLine("BROWSER env not set: Setting default to edge");
@@ -77,6 +70,24 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                     _driverWrapper.Driver = new EdgeDriver();
                     break;
             }
+
+            // Get if screenshots should be taken
+            ScreenshotToggle screenshotToggle;
+            bool parseStatus = Enum.TryParse<ScreenshotToggle>(TestContext.Parameters["ScreenshotToggle"], out screenshotToggle);
+            _outputHelper.WriteLine("Screenshots toggle set to: " + TestContext.Parameters["ScreenshotToggle"]);
+
+            // Set default toggle if null
+            if (!parseStatus)
+            {
+                screenshotToggle = ScreenshotToggle.All;
+                _outputHelper.WriteLine("ScreenshotsToggle param not set: Setting default to All");
+            }
+
+            _scenarioContext["ScreenshotToggle"] = screenshotToggle;
+
+            // Get the url of the website
+            string webUrl = TestContext.Parameters["WebAppUrl"];
+            _outputHelper.WriteLine("The website url is " + webUrl);
 
             // Go to shop url
             _driverWrapper.Driver.Navigate().GoToUrl(webUrl);
