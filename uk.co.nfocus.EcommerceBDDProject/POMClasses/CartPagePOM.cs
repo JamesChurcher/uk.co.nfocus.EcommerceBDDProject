@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -19,11 +20,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
         //----- Locators -----
         private By _discountCodeLocator = By.Id("coupon_code");
-        private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));
+        private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));    //TODO, use locator above
         private IWebElement _applyDiscountButton => _driver.FindElement(By.Name("apply_coupon"));
         private IWebElement _removeFromCartButton => _driver.FindElement(By.ClassName("remove"));
         private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.ClassName("remove"));
-        private IWebElement _removeDiscountButton => _driver.FindElement(By.LinkText("[Remove]"));
+        private IWebElement _removeDiscountButton => _driver.FindElement(By.LinkText("[Remove]"));  //TODO, make a seperate locator
 
         private By _cartDiscountLocator = By.CssSelector(".cart-discount .amount");
         private By _cartTotalLocator = By.CssSelector(".order-total bdi");
@@ -41,9 +42,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Enter discount code
         public CartPagePOM SetDiscountCode(string code)
         {
-            WaitForElDisplayed(_driver, _discountCodeLocator);
-            _discountCodeField.Clear();
-            _discountCodeField.SendKeys(code);
+            _driver.WaitUntilElDisplayed(_discountCodeLocator);
+            _discountCodeField.ClearAndSendKeys(code);
             return this;
         }
 
@@ -68,32 +68,28 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Get the cost removed by the discount and format as a decimal type
         public decimal GetAppliedDiscount()
         {
-            //WaitForElDisplayed(_driver, _cartDiscountLabel);    //TODO remove
-            WaitForElDisplayed(_driver, _cartDiscountLocator);
+            _driver.WaitUntilElDisplayed(_cartDiscountLocator);
             return StringToDecimal(_cartDiscountLabel.Text);
         }
 
         //Get the cart subtotal and format as a decimal type
         public decimal GetCartSubtotal()
         {
-            //WaitForElDisplayed(_driver, _cartSubtotalLabel);    //TODO remove
-            WaitForElDisplayed(_driver, _cartSubtotalLocator);
+            _driver.WaitUntilElDisplayed(_cartSubtotalLocator);
             return StringToDecimal(_cartSubtotalLabel.Text);
         }
 
         //Get the cart total and format as a decimal type
         public decimal GetCartTotal()
         {
-            //WaitForElDisplayed(_driver, _cartTotalLabel);   //TODO remove
-            WaitForElDisplayed(_driver, _cartTotalLocator);
+            _driver.WaitUntilElDisplayed(_cartTotalLocator);
             return StringToDecimal(_cartTotalLabel.Text);
         }
 
         //Get the shipping cost and format as a decimal type
         public decimal GetShippingCost()
         {
-            //WaitForElDisplayed(_driver, _cartShippingCostLabel);    //TODO remove
-            WaitForElDisplayed(_driver, _cartShippingCostLocator);
+            _driver.WaitUntilElDisplayed(_cartShippingCostLocator);
             return StringToDecimal(_cartShippingCostLabel.Text);
         }
 
@@ -129,7 +125,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Wait for banner message to contain text
         public void WaitUntilBannerMessageContains(string substring)
         {
-            GetWaitObject(_driver).Until(drv => DoesBannerMessageContain(substring));
+            _driver.NewWaitObject().Until(drv => DoesBannerMessageContain(substring));
         }
 
         //Scroll to order total
@@ -150,7 +146,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             try
             {
-                WaitForElDisplayed(_driver, By.LinkText("[Remove]"));  //Wait until discount has been applied
+                _driver.WaitUntilElDisplayed(By.LinkText("[Remove]"));  //Wait until discount has been applied  //TODO, move locators to top of POM class
                 return true;    //Coupon applied
             }
             catch (NoSuchElementException)
@@ -174,8 +170,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             }
 
             //Wait until the remove discount link is gone
-            GetWaitObject(_driver).Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);
-            //WaitForValueChange(_driver, 0, _driver.FindElements(By.LinkText("[Remove]")).Count);
+            _driver.NewWaitObject().Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);     //TODO, move locators to top of POM class
 
             int count = _removeFromCartButtons.Count;
             for (int i = count; i > 0; i--)     //Loop for every remove product button in the cart
@@ -184,11 +179,10 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                 count--;
 
                 //Wait until the number of remove product buttons has decreased by 1
-                GetWaitObject(_driver).Until(drv => count == _removeFromCartButtons.Count);
-                //WaitForValueChange(_driver, count, _removeFromCartButtons.Count);
+                _driver.NewWaitObject().Until(drv => count == _removeFromCartButtons.Count);
             }
 
-            WaitForElDisplayed(_driver, By.ClassName("cart-empty"));  //Wait for empty cart to be loaded
+            _driver.WaitUntilElDisplayed(By.ClassName("cart-empty"));  //Wait for empty cart to be loaded   //TODO, move locators to top of POM class
         }
     }
 }

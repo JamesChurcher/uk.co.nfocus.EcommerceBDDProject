@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -34,14 +35,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //Set username in the username field
         public AccountPagePOM SetUsername(string username)
         {
-            _usernameField.SendKeys(username);
+            _usernameField.ClearAndSendKeys(username);
             return this;
         }
 
         //Set password in the password field
         public AccountPagePOM SetPassword(string password)
         {
-            _passwordField.SendKeys(password);
+            _passwordField.ClearAndSendKeys(password);
             return this;
         }
 
@@ -61,7 +62,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         public void GoOrders()
         {
             _ordersButton.Click();
-            WaitForUrlSubstring(_driver, "my-account/orders");  //Wait for order summary page to show
+            _driver.WaitUntilUrlSubstring("my-account/orders");  //Wait for order summary page to show
         }
 
 
@@ -72,7 +73,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //  Returns -> (bool) if login was successful status
         public bool LoginExpectSuccess(string username, string password)
         {
-            WaitForElDisplayed(_driver, _loginButtonLocator);   //Wait to ensure login button has loaded
+            _driver.WaitUntilElDisplayed(_loginButtonLocator);   //Wait to ensure login button has loaded
 
             //Login steps
             SetUsername(username);
@@ -81,7 +82,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             try
             {
-                WaitForElDisplayed(_driver, _logoutButtonLocator);  //Wait until login has completed
+                _driver.WaitUntilElDisplayed(_logoutButtonLocator);  //Wait until login has completed
                 return true;    //Login success
             }
             catch (NoSuchElementException)
@@ -94,14 +95,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //  Returns -> (bool) if logout was successful status
         public bool LogoutExpectSuccess()
         {
-            WaitForElDisplayed(_driver, _logoutButtonLocator);  //Wait to ensure logout button has loaded
+            _driver.WaitUntilElDisplayed(_logoutButtonLocator);  //Wait to ensure logout button has loaded
 
             //Logout steps
             ClickLogout();
 
             try
             {
-                WaitForElDisplayed(_driver, _loginButtonLocator);  //Wait until logout has completed
+                _driver.WaitUntilElDisplayed(_loginButtonLocator);  //Wait until logout has completed
                 return true;    //Logout success
             }
             catch (NoSuchElementException)

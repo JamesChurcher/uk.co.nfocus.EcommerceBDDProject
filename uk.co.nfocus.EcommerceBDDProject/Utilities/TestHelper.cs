@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.Support;
+using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
@@ -25,27 +26,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             None
         }
 
-        //----- Waits -----
-        // Get a new driver wait object
-        public static WebDriverWait GetWaitObject(IWebDriver driver, int timeout = 4)
-        {
-            return new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
-        }
-
-        // Explicit wait for element to be displayed
-        public static void WaitForElDisplayed(IWebDriver driver, By locator)
-        {
-            WebDriverWait wait = GetWaitObject(driver);
-            wait.Until(drv => drv.FindElement(locator).Displayed);
-        }
-
-        //Explicit wait for url to contain substring
-        public static void WaitForUrlSubstring(IWebDriver driver, string urlSubstring)
-        {
-            WebDriverWait wait = GetWaitObject(driver);
-            wait.Until(drv => drv.Url.Contains(urlSubstring));
-        }
-
         //----- Type conversion helpers -----
         // Remove all non numerical characters from a string
         // Returns integer
@@ -62,12 +42,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         }
 
 
-        // Clears then sends string to given text field
-        public static void ClearAndSendToTextField(IWebElement element, string myString)
-        {
-            element.Clear();
-            element.SendKeys(myString);
-        }
+        //// Clears then sends string to given text field
+        //public static void ClearAndSendToTextField(IWebElement element, string myString)
+        //{
+        //    element.Clear();
+        //    element.SendKeys(myString);
+        //}
 
 
         //----- File management -----

@@ -4,13 +4,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.POCOClasses
 {
     internal class BillingDetailsPOCO
     {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string country { get; set; }
-        public string street { get; set; }
-        public string city { get; set; }
-        public string postcode { get; set; }
-        public string phoneNumber { get; set; }
-        public PaymentMethod paymentMethod { get; set; }
+        public string FirstName { get; set; }   //TODO, Fix warning
+        public string LastName { get; set; }
+        public string Country { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string Postcode { get; set; }
+        public string PhoneNumber { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

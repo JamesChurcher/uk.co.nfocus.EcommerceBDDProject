@@ -3,6 +3,7 @@ using OpenQA.Selenium.Support.UI;
 using uk.co.nfocus.EcommerceBDDProject.POCOClasses;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -45,49 +46,49 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //----- Service methods -----
 
         // Setters
-        // First name in the firstName field
+        // First name in the FirstName field
         public CheckoutPagePOM SetFirstName(string name)
         {
-            ClearAndSendToTextField(_firstNameField, name);
+            _firstNameField.ClearAndSendKeys(name);
             return this;
         }
 
         // Last name in the lastname field
         public CheckoutPagePOM SetLastName(string name)
         {
-            ClearAndSendToTextField(_lastNameField, name);
+            _lastNameField.ClearAndSendKeys(name);
             return this;
         }
 
-        // Street in the street field
+        // Street in the Street field
         public CheckoutPagePOM SetStreetAddress(string street)
         {
-            ClearAndSendToTextField(_streetField, street);
+            _streetField.ClearAndSendKeys(street);
             return this;
         }
 
-        // City in the city field
+        // City in the City field
         public CheckoutPagePOM SetCityField(string city)
         {
-            ClearAndSendToTextField(_cityField, city);
+            _cityField.ClearAndSendKeys(city);
             return this;
         }
 
-        // Postcode in the postcode field
+        // Postcode in the Postcode field
         public CheckoutPagePOM SetPostcodeField(string postcode)
         {
-            ClearAndSendToTextField(_postcodeField, postcode);
+            _postcodeField.ClearAndSendKeys(postcode);
             return this;
         }
 
-        // Phone number in the phoneNumber field
+        // Phone number in the PhoneNumber field
         public CheckoutPagePOM SetPhoneNumberField(string phoneNumber)
         {
-            ClearAndSendToTextField(_phoneNumberField, phoneNumber);
+            _phoneNumberField.ClearAndSendKeys(phoneNumber);
             return this;
         }
 
-        // Select the country from the dropdown
+        // Select the Country from the dropdown
         public CheckoutPagePOM SelectCounrtyDropdown(string country)
         {
             new SelectElement(_countryDropDown).SelectByText(country);
@@ -125,7 +126,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         public void ClickPlaceOrder()
         {
             _placeOrderButton.Click();
-            WaitForUrlSubstring(_driver, "order");  //Wait for order summary page to show
+            _driver.WaitUntilUrlSubstring("order");  //Wait for order summary page to show
         }
 
         //----- Higher level helpers -----
@@ -133,18 +134,18 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         public void CheckoutExpectSuccess(BillingDetailsPOCO billingDetails)
         {
             // Set text field information
-            SetFirstName(billingDetails.firstName);
-            SetLastName(billingDetails.lastName);
-            SetStreetAddress(billingDetails.street);
-            SetCityField(billingDetails.city);
-            SetPostcodeField(billingDetails.postcode);
-            SetPhoneNumberField(billingDetails.phoneNumber);
+            SetFirstName(billingDetails.FirstName);
+            SetLastName(billingDetails.LastName);
+            SetStreetAddress(billingDetails.Street);
+            SetCityField(billingDetails.City);
+            SetPostcodeField(billingDetails.Postcode);
+            SetPhoneNumberField(billingDetails.PhoneNumber);
 
             // Select from dropdown
-            SelectCounrtyDropdown(billingDetails.country);
+            SelectCounrtyDropdown(billingDetails.Country);
 
             // Select payment method
-            SelectPaymentMethod(billingDetails.paymentMethod);
+            SelectPaymentMethod(billingDetails.PaymentMethod);
 
             //Loop over button click until it is loaded onto page
             for (int i = 0; i < 15; i++)

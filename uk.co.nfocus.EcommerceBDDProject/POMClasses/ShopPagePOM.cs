@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
 using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
+using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -44,7 +45,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             count++;
 
             //Wait until basket has registered new item and count has incremented
-            GetWaitObject(_driver).Until(drv => count == StringToInt(_cartItemCountLabel.Text));
+            _driver.NewWaitObject().Until(drv => count == StringToInt(_cartItemCountLabel.Text));
             //WaitForValueChange(_driver, count, StringToInt(_cartItemCountLabel.Text));
             //Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
         }
