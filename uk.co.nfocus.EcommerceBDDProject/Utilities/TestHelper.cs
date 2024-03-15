@@ -8,7 +8,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
     internal static class TestHelper
     {
-        private static string _screenshotPath = new Uri(Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\").AbsolutePath;
+        private static string _screenshotPath = new Uri(Directory.GetCurrentDirectory() + @"\..\..\..\Screenshots\").LocalPath;
 
         //Enums for payment methods
         public enum PaymentMethod
