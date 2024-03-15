@@ -27,8 +27,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         {
             // Get environment variables
             // Get username and password and make available during test
-            string username = Environment.GetEnvironmentVariable("USERNAME");
-            string password = Environment.GetEnvironmentVariable("PASSWORD");
+            string username = TestContext.Parameters["Username"];
+            string password = TestContext.Parameters["Password"];
 
             // Check if runfile contains usernme and password
             if (username == null || password == null)
@@ -73,7 +73,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
 
             // Get if screenshots should be taken
             ScreenshotToggle screenshotToggle;
-            bool parseStatus = Enum.TryParse<ScreenshotToggle>(TestContext.Parameters["ScreenshotToggle"], out screenshotToggle);
+            bool parseStatus = Enum.TryParse<ScreenshotToggle>(Environment.GetEnvironmentVariable("SCREENSHOTTOGGLE"), out screenshotToggle);
             _outputHelper.WriteLine("Screenshots toggle set to: " + TestContext.Parameters["ScreenshotToggle"]);
 
             // Set default toggle if null

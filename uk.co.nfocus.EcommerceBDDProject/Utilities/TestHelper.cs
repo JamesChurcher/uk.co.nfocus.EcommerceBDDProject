@@ -1,10 +1,8 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using TechTalk.SpecFlow.Infrastructure;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.Utilities
 {
@@ -40,14 +38,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         {
             return Decimal.Parse(myString, NumberStyles.AllowCurrencySymbol | NumberStyles.Number, new CultureInfo("en-GB"));
         }
-
-
-        //// Clears then sends string to given text field
-        //public static void ClearAndSendToTextField(IWebElement element, string myString)
-        //{
-        //    element.Clear();
-        //    element.SendKeys(myString);
-        //}
 
 
         //----- File management -----
