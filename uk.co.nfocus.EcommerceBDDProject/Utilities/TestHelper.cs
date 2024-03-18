@@ -79,9 +79,14 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             if (screenshotToggle != ScreenshotToggle.All)
                 return;
 
+            //Create screenshots directory if it doesn't exist
+            Directory.CreateDirectory(_screenshotPath);
+
+            //Make a new screenshot
             string screenshotName = ValidFileNameFromTest(name);
             string imagePath = TakeScreenshot(driverWrapper.Driver, screenshotName);
 
+            //Add to test for reporting
             TestContext.AddTestAttachment(imagePath, description);
             outputHelper.AddAttachment(@"file:///" + imagePath);
         }
