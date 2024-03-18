@@ -5,7 +5,7 @@
 * [Setup](#setup)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Run settings](#runsettings)
+  * [Run settings](#run-settings)
 * [Running tests](#running-tests)
 * [Troubleshooting](#troubleshooting)
 
@@ -37,9 +37,15 @@ This project requires Visual Studio which can be installed from their [website](
    git clone "https://github.com/JamesChurcher/uk.co.nfocus.EcommerceBDDProject.git"
    ```
 
-2. Open the project solution in visual studio
+2. Create an account on the edgewords shop website https://www.edgewordstraining.co.uk/demo-site/ and record the username and password used
 
-3. Create a file called 'local.runsettings' with the text below. Update the environment variables and test run parameters, particularly the username and password of the account the tests need to login to.
+    ![Screenshot of login and register page][AccountPage]
+
+3. Open the project solution in Visual Studio
+
+### Run settings
+
+Create a file called 'local.runsettings' with the text below. Update the environment variables and test run parameters, particularly the username and password of the account the tests need to login to.
    ```xml
    <?xml version="1.0" encoding="utf-8" ?>
    <RunSettings>
@@ -53,7 +59,7 @@ This project requires Visual Studio which can be installed from their [website](
        </RunConfiguration>
        <TestRunParameters>
            <!-- NUnit config params, only tests have access to, describes tests -->
-           <Parameter name="WebAppUrl" value="The website url"/>
+           <Parameter name="WebAppUrl" value="https://www.edgewordstraining.co.uk/demo-site/"/>
            <Parameter name="Username"  value="Account email address"/>
            <Parameter name="Password"  value="Account password"/>
        </TestRunParameters>
@@ -68,3 +74,19 @@ This project requires Visual Studio which can be installed from their [website](
    * WebAppUrl -> The url of the website to test
    * Username -> The username of the account to log into
    * Password -> The password of the account to log into
+
+## Running tests
+
+All tests in this project can be viewed and run in the Test Explorer, which can be opened under the view tab: View>Test Explorer
+
+![Screenshot of Test Explorer showing the tests under this project][TestExplorer]
+
+You can run individual test by selecting the test and clicking the single green play symbol ![Single play symbol][SinglePlaySymbol] or run all test by pressing the double green play symbol ![Double play symbol][DoublePlaySymbol]
+
+## Troubleshooting
+
+
+[AccountPage]: ./README-Assets/AccountPage.png
+[TestExplorer]: ./README-Assets/TestExplorer.png
+[SinglePlaySymbol]: ./README-Assets/RunIndividualTests.png
+[DoublePlaySymbol]: ./README-Assets/RunAllTests.png
