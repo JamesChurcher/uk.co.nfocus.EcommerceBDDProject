@@ -6,6 +6,7 @@
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
   * [Run settings](#run-settings)
+    * [Env variables and params](#environment-variables-and-test-run-parameters)
 * [Running tests](#running-tests)
   * [Running from Visual Studio](#running-from-visual-studio)
   * [Running from terminal](#running-from-the-terminal)
@@ -67,14 +68,17 @@ Create a file called `local.runsettings` inside the folder `.\uk.co.nfocus.Ecomm
    </RunSettings>
    ```
 
-   Environment variables: 
-   * BROWSER -> Specifies the browser environment that the test driver will execute the tests
-   * SCREENSHOTTOGGLE -> Toggles screenshot capture on and off
+#### Environment variables and Test run parameters
 
-   Test run parameters:
-   * WebAppUrl -> The url of the website to test
-   * Username -> The username of the account to log into
-   * Password -> The password of the account to log into
+Here you can see what each variable and parameter is for and what possible values you can set for them
+
+| Field name       | Description                                                                   | Values                |
+| ---------------- | ----------------------------------------------------------------------------- | --------------------- |
+| BROWSER          | Specifies the browser environment that the test driver will execute the tests | edge, chrome, firefox |
+| SCREENSHOTTOGGLE | Toggles screenshot capture on and off                                         | All, None             |
+| WebAppUrl        | The url of the website to test                                                |                       |
+| Username         | The username of the account to log into                                       |                       |
+| Password         | The password of the account to log into                                       |                       |
 
 ## Running tests
 
