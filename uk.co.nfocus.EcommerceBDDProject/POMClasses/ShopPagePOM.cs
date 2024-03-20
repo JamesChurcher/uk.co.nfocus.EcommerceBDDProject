@@ -8,7 +8,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
     internal class ShopPagePOM
     {
         private IWebDriver _driver;
-        private Dictionary<string, IWebElement> _productToElementDict;
+        private Dictionary<string, IWebElement> _productToElementDict;  //Product name -> "Add to cart" button element
 
         public ShopPagePOM(WebDriverWrapper driverWrapper)
         {
@@ -18,15 +18,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                         Does.Contain("shop"),
                         "Not on the shop page");   //Verify we are on the correct page
 
-            GetProductElements();
+            _productToElementDict = new();
+            GetProductElements();   //Populate _productToElementDict dictionary, stores pairs of product names and their "Add to cart" button
         }
 
         //----- Locators -----
-        //private By _viewCartButtonLocator => By.LinkText("View cart");
         private IWebElement _cartItemCountLabel => _driver.FindElement(By.ClassName("count"));
-        //private IReadOnlyList<IWebElement> _addToCartButtons => _driver.FindElements(By.LinkText("Add to cart"));
-
-        private IReadOnlyList<IWebElement> _productsInShopElement => _driver.FindElements(By.ClassName("product"));
+        private IReadOnlyList<IWebElement> _productsInShopElements => _driver.FindElements(By.ClassName("product"));
         private By _productName = By.TagName("h2");
         private By _productAddToCartButton = By.LinkText("Add to cart");
 
@@ -37,30 +35,29 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         //  Param -> productName: The product to add to the cart
         public void ClickAddToBasket(string productName)
         {
-            //Count of how many items are in basket
+            //Verify product is in dictionary
+            if (!_productToElementDict.ContainsKey(productName))
+            {
+                throw new KeyNotFoundException($"Requested product \"{productName}\" was not found in the shop");
+            }
+
+            //Count how many items are in basket
             int count = StringToInt(_cartItemCountLabel.Text);
 
-            IWebElement element = _productToElementDict[productName];
-            element.Click();
-            count++;
+            _productToElementDict[productName].Click();
 
             //Wait until basket has registered new item and count has incremented
-            _driver.NewWaitObject().Until(drv => count == StringToInt(_cartItemCountLabel.Text));
-            //WaitForValueChange(_driver, count, StringToInt(_cartItemCountLabel.Text));
-            //Console.WriteLine("Cart count is " + _cartItemCountLabel.Text);
+            _driver.NewWaitObject().Until(drv => count+1 == StringToInt(_cartItemCountLabel.Text));
         }
 
         //Create a dictionary of all product names paired with the button element that will add it to the cart
+        //Populates the _productToElementDict dictionary
         private void GetProductElements()
         {
-            //Get all elements that represent a product on the page
-            IReadOnlyList<IWebElement> products = _productsInShopElement;
-
-            //Create a dictionary to hold pairings between product name and button to add to basket
             _productToElementDict = new();
 
-            //Loop over products and create pairings between product name and add to cart button element
-            foreach (IWebElement element in products)
+            //Loop over products on the page and make pairs between product name and the "Add to cart" button element
+            foreach (IWebElement element in _productsInShopElements)
             {
                 string name = element.FindElement(_productName).Text;
                 IWebElement button = element.FindElement(_productAddToCartButton);
