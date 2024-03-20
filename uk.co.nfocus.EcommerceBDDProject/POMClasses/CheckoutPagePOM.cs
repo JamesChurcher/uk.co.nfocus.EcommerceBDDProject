@@ -98,17 +98,16 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         // Select payment method from radio buttons
         public CheckoutPagePOM SelectPaymentMethod(PaymentMethod method)
         {
-
+            bool flag = false;
 
             //Loop over radio click until it is loaded
             for (int i = 0; i < 15; i++)
             {
                 try
                 {
-                    //Console.WriteLine("For loop i is " + i);
-
                     //Find the payment method and click
                     _GetChildPaymentMethod(method).Click();
+                    flag = true;
 
                     break;
                 }
@@ -116,7 +115,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                 {
                     Thread.Sleep(150);  //Pause while page loads
                 }
-                // TODO, maybe catch no element exception too?
+            }
+
+            // If trying to select payment method was still unsuccessful
+            if (!flag)
+            {
+                throw new ElementNotVisibleException("Could not click element to select payment method");
             }
 
             return this;
@@ -147,20 +151,28 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             // Select payment method
             SelectPaymentMethod(billingDetails.PaymentMethod);
 
+            bool flag = false;
+
             //Loop over button click until it is loaded onto page
             for (int i = 0; i < 15; i++)
             {
                 try
                 {
-                    //Console.WriteLine("For loop i is " + i);
-                    ClickPlaceOrder();
+                    ClickPlaceOrder();  //Place order
+                    flag = true;
+
                     break;
                 }
                 catch (Exception)      //Catch if the place order button has not loaded yet
                 {
                     Thread.Sleep(150);  //Pause while page loads
                 }
-                // TODO, maybe catch no element exception too?
+            }
+
+            // If trying to place an order was still unsuccessful
+            if (!flag)
+            {
+                throw new ElementNotVisibleException("Could not click element to place order");
             }
         }
     }
