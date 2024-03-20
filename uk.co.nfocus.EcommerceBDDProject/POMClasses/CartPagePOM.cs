@@ -20,11 +20,13 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
         //----- Locators -----
         private By _discountCodeLocator = By.Id("coupon_code");
-        private IWebElement _discountCodeField => _driver.FindElement(By.Id("coupon_code"));    //TODO, use locator above
+        private IWebElement _discountCodeField => _driver.FindElement(_discountCodeLocator);
         private IWebElement _applyDiscountButton => _driver.FindElement(By.Name("apply_coupon"));
         private IWebElement _removeFromCartButton => _driver.FindElement(By.ClassName("remove"));
         private IReadOnlyList<IWebElement> _removeFromCartButtons => _driver.FindElements(By.ClassName("remove"));
-        private IWebElement _removeDiscountButton => _driver.FindElement(By.LinkText("[Remove]"));  //TODO, make a seperate locator
+
+        private By _removeDiscountLocator = By.LinkText("[Remove]");
+        private IWebElement _removeDiscountButton => _driver.FindElement(_removeDiscountLocator);
 
         private By _cartDiscountLocator = By.CssSelector(".cart-discount .amount");
         private By _cartTotalLocator = By.CssSelector(".order-total bdi");
@@ -36,6 +38,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private IWebElement _cartShippingCostLabel => _driver.FindElement(_cartShippingCostLocator);
 
         private IWebElement _bannerMessage => _driver.FindElement(By.ClassName("woocommerce-message"));
+
+        private By _cartEmptyLocator = By.ClassName("cart-empty");
 
         //----- Service methods -----
 
@@ -146,7 +150,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             try
             {
-                _driver.WaitUntilElDisplayed(By.LinkText("[Remove]"));  //Wait until discount has been applied  //TODO, move locators to top of POM class
+                _driver.WaitUntilElDisplayed(_removeDiscountLocator);  //Wait until discount has been applied
                 return true;    //Coupon applied
             }
             catch (NoSuchElementException)
@@ -170,7 +174,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             }
 
             //Wait until the remove discount link is gone
-            _driver.NewWaitObject().Until(drv => 0 == _driver.FindElements(By.LinkText("[Remove]")).Count);     //TODO, move locators to top of POM class
+            _driver.NewWaitObject().Until(drv => 0 == drv.FindElements(_removeDiscountLocator).Count);
 
             int count = _removeFromCartButtons.Count;
             for (int i = count; i > 0; i--)     //Loop for every remove product button in the cart
@@ -182,7 +186,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
                 _driver.NewWaitObject().Until(drv => count == _removeFromCartButtons.Count);
             }
 
-            _driver.WaitUntilElDisplayed(By.ClassName("cart-empty"));  //Wait for empty cart to be loaded   //TODO, move locators to top of POM class
+            _driver.WaitUntilElDisplayed(_cartEmptyLocator);  //Wait for empty cart to be loaded
         }
     }
 }
