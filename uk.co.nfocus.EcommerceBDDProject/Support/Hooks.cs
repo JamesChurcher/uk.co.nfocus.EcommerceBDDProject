@@ -27,11 +27,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         {
             // Get environment variables
             // Get username and password and make available during test
-            string username = TestContext.Parameters["Username"];
-            string password = TestContext.Parameters["Password"];
+            string? username = TestContext.Parameters["Username"];
+            string? password = TestContext.Parameters["Password"];
 
             // Check if runfile contains usernme and password
-            if (username == null || password == null)
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 throw new NotFoundException("Could not set Username and Password, env variables not found");
             }
@@ -45,15 +45,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             _scenarioContext["Password"] = password;
 
             // Get browser version to use
-            string browser = Environment.GetEnvironmentVariable("BROWSER");
+            string? browser = Environment.GetEnvironmentVariable("BROWSER");
             _outputHelper.WriteLine($"Browser is set to: {browser}");
-
-            // Default to Edge if browser env is null
-            if (string.IsNullOrEmpty(browser))
-            {
-                browser = "edge";
-                _outputHelper.WriteLine("BROWSER env not set: Setting default to edge");
-            }
 
             //Instantiate a browser based on variable
             switch (browser)
@@ -63,11 +56,15 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                     break;
                 case "chrome":
                     ChromeOptions options = new ChromeOptions();
-                    options.BrowserVersion = "canary"; //stable/beta/dev/canary/num
+                    options.BrowserVersion = "canary";
                     _driverWrapper.Driver = new ChromeDriver(options);
                     break;
                 default:
                     _driverWrapper.Driver = new EdgeDriver();
+                    if (browser != "edge")
+                    {
+                        _outputHelper.WriteLine("BROWSER env not set or invalid: Setting default to edge");
+                    }
                     break;
             }
 
@@ -97,33 +94,45 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
         [After]
         public void Teardown()
         {
-            //Get navbar object from session
-            NavBarPOM navbar = (NavBarPOM)_scenarioContext["NavBarPOMObject"];
-            //NavBarPOM navbar = new(_driverWrapper);
+            try
+            {
+                //Get navbar object from session
+                NavBarPOM navbar = (NavBarPOM)_scenarioContext["NavBarPOMObject"];
+                //NavBarPOM navbar = new(_driverWrapper);
 
-            //Navigate back to the cart to clear it
-            navbar.GoCart();
+                //Navigate back to the cart to clear it
+                navbar.GoCart();
 
-            CartPagePOM cartPage = new(_driverWrapper);
+                CartPagePOM cartPage = new(_driverWrapper);
 
-            //Remove the discount and products if they exist
-            cartPage.MakeCartEmpty();
-            _outputHelper.WriteLine("Removed items from cart");
+                //Remove the discount and products if they exist
+                cartPage.MakeCartEmpty();
+                _outputHelper.WriteLine("Removed items from cart");
 
-            //Navigate to my account to log out
-            navbar.GoAccount();
+                //Navigate to my account to log out
+                navbar.GoAccount();
 
-            // Logout
-            AccountPagePOM accountPage = new(_driverWrapper);
-            bool logoutStatus = accountPage.LogoutExpectSuccess();
-            Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
+                // Logout
+                AccountPagePOM accountPage = new(_driverWrapper);
+                bool logoutStatus = accountPage.LogoutExpectSuccess();
+                Assert.That(logoutStatus, "Could not logout");   //Verify successful logout
 
-            _outputHelper.WriteLine("Logout from account");
+                _outputHelper.WriteLine("Logout from account");
 
-            _outputHelper.WriteLine("--Test Complete!--");
+                _outputHelper.WriteLine("--Test Complete!--");
 
-            // Quit and dispose of driver
-            _driverWrapper.Driver.Quit();
+                // Quit and dispose of driver
+                _driverWrapper.Driver.Quit();
+            }
+            catch (Exception)
+            {
+                _outputHelper.WriteLine("Error occured during teardown!");
+
+                // Quit and dispose of driver
+                _driverWrapper.Driver.Quit();
+
+                throw;
+            }
         }
     }
 }
