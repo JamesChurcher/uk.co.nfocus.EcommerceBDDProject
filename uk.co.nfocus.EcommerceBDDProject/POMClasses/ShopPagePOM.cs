@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
+using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 {
@@ -47,7 +47,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             _productToElementDict[productName].Click();
 
             //Wait until basket has registered new item and count has incremented
-            _driver.NewWaitObject().Until(drv => count+1 == StringToInt(_cartItemCountLabel.Text));
+            _driver.NewWaitObject().Until(drv => count + 1 == StringToInt(_cartItemCountLabel.Text));
         }
 
         //Create a dictionary of all product names paired with the button element that will add it to the cart

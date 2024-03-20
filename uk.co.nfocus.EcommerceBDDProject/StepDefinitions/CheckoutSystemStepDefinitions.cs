@@ -14,8 +14,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         private readonly WebDriverWrapper _driverWrapper;
         private readonly ISpecFlowOutputHelper _outputHelper;
 
+        private readonly ScreenshotToggle _screenshotToggle;
         private NavBarPOM _navBar;
-        private ScreenshotToggle _screenshotToggle;
 
         public CheckoutSystemStepDefinitions(ScenarioContext scenarioContext, WebDriverWrapper driverWrapper, ISpecFlowOutputHelper outputHelper)
         {
@@ -81,7 +81,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
                 // Add the given quantity of product to cart
                 for (int i = quantity; i > 0; i--)
                 {
-                    //Console.WriteLine("loop over cart i " + i);
                     shopPage.ClickAddToBasket(item);
 
                     _outputHelper.WriteLine($"Added {item} to the basket");
@@ -108,8 +107,8 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             CartPagePOM cartPage = new(_driverWrapper);
 
             bool discountStatus = cartPage.ApplyDiscountExpectSuccess(testDiscountCode);
-            //Assert.That(discountStatus, "Could not apply discount");   //Verify discount was applied
 
+            //Verify discount was applied
             if (discountStatus)
                 _outputHelper.WriteLine("Applied discount code");
             else
@@ -258,6 +257,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
             else
                 _outputHelper.WriteLine($"No order #{orderNumber} is recorded under this account");
 
+            // Verify if the created order is listed under this account
             Assert.That(isOrderCreated, $"Created order #{orderNumber} not listed under this account");
         }
     }

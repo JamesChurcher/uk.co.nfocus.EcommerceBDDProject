@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
@@ -18,7 +17,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         }
 
         //----- Locators -----
-        private IWebElement _homeButton => _driver.FindElement(By.LinkText("Home"));
+        //private IWebElement _homeButton => _driver.FindElement(By.LinkText("Home"));
         private IWebElement _shopButton => _driver.FindElement(By.LinkText("Shop"));
         private IWebElement _cartButton => _driver.FindElement(By.LinkText("Cart"));
         private IWebElement _checkoutButton => _driver.FindElement(By.LinkText("Checkout"));

@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
 using uk.co.nfocus.EcommerceBDDProject.Support;
-using static uk.co.nfocus.EcommerceBDDProject.Utilities.TestHelper;
 using uk.co.nfocus.EcommerceBDDProject.Utilities;
 
 namespace uk.co.nfocus.EcommerceBDDProject.POMClasses

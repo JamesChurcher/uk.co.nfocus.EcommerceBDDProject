@@ -31,7 +31,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
 
             foreach (var order in orderNumbers)
             {
-                //Console.WriteLine($"Does current order {order.Text} contain {orderNumber}");
                 if (order.Text.Contains(orderNumber))
                 {
                     return true;

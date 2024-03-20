@@ -17,10 +17,10 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
             cod
         }
 
+        //Screenshot toggle states
         public enum ScreenshotToggle
         {
             All,
-            //Failed,
             None
         }
 
@@ -46,8 +46,12 @@ namespace uk.co.nfocus.EcommerceBDDProject.Utilities
         {
             var path = _screenshotPath + name + ".png";
 
-            ITakesScreenshot ssdriver = driver as ITakesScreenshot;
-            ssdriver.GetScreenshot().SaveAsFile(path);
+            ITakesScreenshot? ssdriver = driver as ITakesScreenshot;
+
+            if (ssdriver != null)
+            {
+                ssdriver.GetScreenshot().SaveAsFile(path);
+            }
 
             return path;
         }

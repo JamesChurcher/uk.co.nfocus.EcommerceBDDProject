@@ -33,7 +33,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             // Check if runfile contains usernme and password
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                throw new NotFoundException("Could not set Username and Password, env variables not found");
+                throw new NotFoundException("Could not set Username and Password, test run params not found");
             }
             else
             {
@@ -69,8 +69,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             }
 
             // Get if screenshots should be taken
-            ScreenshotToggle screenshotToggle;
-            bool parseStatus = Enum.TryParse<ScreenshotToggle>(Environment.GetEnvironmentVariable("SCREENSHOTTOGGLE"), out screenshotToggle);
+            bool parseStatus = Enum.TryParse<ScreenshotToggle>(Environment.GetEnvironmentVariable("SCREENSHOTTOGGLE"), out ScreenshotToggle screenshotToggle);
             _outputHelper.WriteLine("Screenshots toggle set to: " + TestContext.Parameters["ScreenshotToggle"]);
 
             // Set default toggle if null
@@ -80,11 +79,21 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                 _outputHelper.WriteLine("ScreenshotsToggle param not set: Setting default to All");
             }
 
+            // Pass screenshot toggle status to the steps
             _scenarioContext["ScreenshotToggle"] = screenshotToggle;
 
             // Get the url of the website
-            string webUrl = TestContext.Parameters["WebAppUrl"];
-            _outputHelper.WriteLine("The website url is " + webUrl);
+            string? webUrl = TestContext.Parameters["WebAppUrl"];
+
+            // Check if runfile contains the website url
+            if (string.IsNullOrEmpty(webUrl))
+            {
+                throw new NotFoundException("Could not set Web app url, test run param not found");
+            }
+            else
+            {
+                _outputHelper.WriteLine("The website url is " + webUrl);
+            }
 
             // Go to shop url
             _driverWrapper.Driver.Navigate().GoToUrl(webUrl);
@@ -98,7 +107,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
             {
                 //Get navbar object from session
                 NavBarPOM navbar = (NavBarPOM)_scenarioContext["NavBarPOMObject"];
-                //NavBarPOM navbar = new(_driverWrapper);
 
                 //Navigate back to the cart to clear it
                 navbar.GoCart();
@@ -124,7 +132,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.Support
                 // Quit and dispose of driver
                 _driverWrapper.Driver.Quit();
             }
-            catch (Exception)
+            catch (Exception)   //Catch any errors during teardown, so driver always quits
             {
                 _outputHelper.WriteLine("Error occured during teardown!");
 
