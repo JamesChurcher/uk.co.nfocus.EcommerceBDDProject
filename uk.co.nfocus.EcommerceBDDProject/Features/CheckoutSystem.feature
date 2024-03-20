@@ -15,15 +15,15 @@ coupon code is accepted.
 
 	Given we add '<quantity>' of '<item>' to the cart
 	  And we are viewing the cart page
-	 When a discount code 'edgewords' is applied
-	 Then 15% is subtracted from the total
+	 When a discount code '<code>' is applied
+	 Then <discount> is subtracted from the total
 
 	 Examples: 
-	 | item       | quantity |
-	 | Beanie     | 1        |
-	 | Belt       | 3        |
-	 | Cap,Hoodie | 1        |
-	 | Hoodie     | 8        |
+	 | item       | quantity | code      | discount |
+	 | Beanie     | 1        | edgewords | 15%      |
+	 | Belt       | 3        | edgewords | 15%      |
+	 | Cap,Hoodie | 1        | nfocus    | 25%      |
+	 | Hoodie     | 8        | edgewords | 15%      |
 
 @TestCase2
 Scenario: Checkout cart and create an order

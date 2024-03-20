@@ -117,8 +117,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.StepDefinitions
         }
 
         [Then(@"(.*)% is subtracted from the total")]
-        public void ThenTheCorrectAmountIsSubtractedFromTheTotal(Decimal couponWorth)
+        public void ThenTheCorrectAmountIsSubtractedFromTheTotal(string discountInput)
         {
+            //Convert string to a percentage stored as a Decimal
+            Decimal couponWorth = Decimal.Parse(StringToInt(discountInput).ToString());
+
             //Convert percentage to decimal
             couponWorth /= 100M;
 
