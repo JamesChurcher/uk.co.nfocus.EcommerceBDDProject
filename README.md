@@ -86,7 +86,9 @@ These tests can be run from both the terminal and Visual Studio and the followin
 
 ### Running from Visual Studio
 
-First open the project solution file `uk.co.nfocus.EcommerceBDDProject.csproj` in Visual Studio and built it with `ctrl+b`
+1. First open the project solution file `uk.co.nfocus.EcommerceBDDProject.csproj` in Visual Studio
+2. Configure the project to use your run settings file. Go to Test>Configure Run Settings>Select Solution Wide runsettings File and select the `local.runsettings` file created previously
+3. Build the project with `ctrl+b`
 
 Visual Studio is an easier method to run and view the results of these tests. All tests in this project can be viewed and run in the Test Explorer, which can be opened under the view tab: View>Test Explorer
 
