@@ -12,12 +12,11 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         {
             this._driver = driverWrapper.Driver;  //Provide driver
 
-            Assert.DoesNotThrow(() => _driver.FindElement(By.LinkText("nFocus Shop")),
-                                "Not on the edgewords shop website or navbar not available");    //Verify we are on the correct website
+            Assert.DoesNotThrow(() => _driver.FindElement(By.LinkText("nFocus Shop")),  //May switch between "nFocus Shop" and "Edgewords Shop"
+                                "Not on any edgewords shop webpage or navbar is unavailable");    //Verify we are on the correct website
         }
 
         //----- Locators -----
-        //private IWebElement _homeButton => _driver.FindElement(By.LinkText("Home"));
         private IWebElement _shopButton => _driver.FindElement(By.LinkText("Shop"));
         private IWebElement _cartButton => _driver.FindElement(By.LinkText("Cart"));
         private IWebElement _checkoutButton => _driver.FindElement(By.LinkText("Checkout"));
@@ -28,14 +27,6 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         private By _addToCartButton = By.LinkText("Add to cart");
 
         //----- Service methods -----
-
-        //// Go to home page
-        //public void GoHome()
-        //{
-        //    _homeButton.Click();
-        //    //TODO, wait on something else since every page has entry-title
-        //    _driver.WaitUntilElDisplayed(By.ClassName("entry-title"));   //Wait for home page to load
-        //}
 
         // Go to shop page
         public void GoShop()

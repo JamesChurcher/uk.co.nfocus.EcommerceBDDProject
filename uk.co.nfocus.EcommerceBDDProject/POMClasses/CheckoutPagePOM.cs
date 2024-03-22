@@ -89,7 +89,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
         }
 
         // Select the Country from the dropdown
-        public CheckoutPagePOM SelectCounrtyDropdown(string country)
+        public CheckoutPagePOM SelectCountryDropdown(string country)
         {
             new SelectElement(_countryDropDown).SelectByText(country);
             return this;
@@ -146,7 +146,7 @@ namespace uk.co.nfocus.EcommerceBDDProject.POMClasses
             SetPhoneNumberField(billingDetails.PhoneNumber);
 
             // Select from dropdown
-            SelectCounrtyDropdown(billingDetails.Country);
+            SelectCountryDropdown(billingDetails.Country);
 
             // Select payment method
             SelectPaymentMethod(billingDetails.PaymentMethod);

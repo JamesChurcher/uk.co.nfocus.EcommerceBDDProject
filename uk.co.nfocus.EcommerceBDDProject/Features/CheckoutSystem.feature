@@ -33,14 +33,14 @@ orders on the account.
 	Given we add 3 randomly chosen items to the cart
 	  And we are viewing the checkout page
 	 When a purchase is completed with billing information
-	 | field         | values              |
-	 | firstName     | Jeff                |
-	 | lastName      | Bezos               |
-	 | country       | United Kingdom (UK) |
-	 | street        | Amazon lane         |
-	 | city          | New York            |
-	 | postcode      | W1J 7NT             |
-	 | phoneNumber   | 07946 123400        |
-	 | paymentMethod | cheque              |
+		 | field         | values              |
+		 | firstName     | Jeff                |
+		 | lastName      | Bezos               |
+		 | country       | United Kingdom (UK) |
+		 | street        | Amazon lane         |
+		 | city          | New York            |
+		 | postcode      | W1J 7NT             |
+		 | phoneNumber   | 07946 123400        |
+		 | paymentMethod | cheque              |
 	 Then a new order is created
 	  And our account records this new order
